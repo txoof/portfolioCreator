@@ -11,6 +11,7 @@ argconfigparse = "*"
 console-menu = "*"
 humanfriendly = "*"
 rich = "*"
+xattr = "*"
 
 [requires]
 python_version = "3"
