@@ -11,7 +11,7 @@ argconfigparse = "*"
 console-menu = "*"
 humanfriendly = "*"
 rich = "*"
-xattr = "*"
+pysimplegui = "*"
 
 [requires]
 python_version = "3"
