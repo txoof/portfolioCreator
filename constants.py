@@ -9,7 +9,7 @@ git_repo = f'github.com/txoof/{app_name}'
 # config file locations
 config_file = '.'.join((app_name, 'ini'))
 config_dir = '.'.join((devel_name, app_name))
-user_config_path = Path('~').expanduser()/config_dir/config_file
+user_config_path = Path('~/.config').expanduser()/config_dir/config_file
 
 # logging setup
 log_file = Path('~/'+app_name+'.log').expanduser().absolute()
