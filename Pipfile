@@ -7,11 +7,8 @@ verify_ssl = true
 
 [packages]
 ipykernel = "*"
-argconfigparse = "*"
-console-menu = "*"
-humanfriendly = "*"
-rich = "*"
 pysimplegui = "*"
+argconfigparse = "*"
 
 [requires]
 python_version = "3"

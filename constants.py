@@ -1,14 +1,23 @@
 from pathlib import Path
+# basics
 version = '0.0.1'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
 contact = 'aaron.ciuffo@gmail.com'
 git_repo = f'github.com/txoof/{app_name}'
 
+# config file locations
 config_file = '.'.join((app_name, 'ini'))
 config_dir = '.'.join((devel_name, app_name))
 user_config_path = Path('~').expanduser()/config_dir/config_file
 
+# logging setup
+log_file = Path('~/'+app_name+'.log').expanduser().absolute()
+# max log size in bytes
+log_size = 1000000
+
+
+# program specific constants
 # sentry file that program expects to find in root of Cumulative folders dir
 sentry_file = 'sentryFile_DO_NOT_REMOVE.txt'
 
