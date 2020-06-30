@@ -7,14 +7,16 @@ contact = 'aaron.ciuffo@gmail.com'
 git_repo = f'github.com/txoof/{app_name}'
 
 # config file locations
+# logging configuration
+logging_config = Path('logging_cfg.ini')
+# base configuration
 config_file = '.'.join((app_name, 'ini'))
+# user configuration 
 config_dir = '.'.join((devel_name, app_name))
 user_config_path = Path('~/.config').expanduser()/config_dir/config_file
 
 # logging setup
 log_file = Path('~/'+app_name+'.log').expanduser().absolute()
-# max log size in bytes
-log_size = 1000000
 
 
 # program specific constants
