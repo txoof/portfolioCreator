@@ -1,3 +1,4 @@
 Pipfile.lock
 *.text
 student.export*
+rubish/*
