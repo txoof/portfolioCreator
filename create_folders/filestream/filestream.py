@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[63]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert filestream.ipynb ./filestream')
@@ -10,7 +10,7 @@
 
 
 
-# In[ ]:
+# In[64]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -299,17 +299,17 @@ class GDStudentPath(GoogleDrivePath):
     def __init__(self, root=None, ClassOf=None, Student_Number=None, LastFirst=None):
         '''student directory in google drive; child class of GoogleDrivePath
         
-        Student directories are constructed from root/ClassOf-YYY/Last, First - Student_Number:
-        /Volumes/GoogleDrive/Shared drives/Cumm Drive/Cumm Folders/ClassOf-2020/Flynn, Erol - 123567
+        Student directories are constructed from root/Class Of-YYY/Last, First - Student_Number:
+        /Volumes/GoogleDrive/Shared drives/Cumm Drive/Cumm Folders/Class Of-2020/Flynn, Erol - 123567
         
         Args:
             root(`str`): root directory for student paths ( /Volumes/GoogleDrive/Shared drives/Cumm Drive/Cumm Folders/)
-            ClassOf(`str`): "ClassOf-YYYY" string representation of projected graduation year
+            ClassOf(`str`): "Class Of-YYYY" string representation of projected graduation year
             LastFirst(`str`): "Last, First" string representation of student name
             Student_Number(`int`): student id number
             
         Properties:
-            ClassOf(`str`): "ClassOf-YYYY" string representation of projected graduation year
+            ClassOf(`str`): "Class Of-YYYY" string representation of projected graduation year
             LastFirst(`str`): "Last, First" string representation of student name
             Student_Number(`int`): student id number
             matches(`dict`):  name and webview link of directories that contain "id_number"
@@ -340,7 +340,7 @@ class GDStudentPath(GoogleDrivePath):
                 self._path = None
                 break
             else:
-                student_dir = f"ClassOf-{self.path_parts['ClassOf']}/{self.path_parts['LastFirst']} - {self.path_parts['Student_Number']}"
+                student_dir = f"Class Of-{self.path_parts['ClassOf']}/{self.path_parts['LastFirst']} - {self.path_parts['Student_Number']}"
                 student_dir = f'{str(self.root)}/{student_dir}'
                 self._path = Path(student_dir)
         return self._path
@@ -363,7 +363,7 @@ class GDStudentPath(GoogleDrivePath):
     
     def check_similar(self):
         '''check for similarly named directories based on student id number 
-        within the root/ClassOf-XXXX/ directory
+        within the root/Class Of-XXXX/ directory
         
         Properties Set:
             self.matches(`dict`): dictionary of similar directories
@@ -372,7 +372,7 @@ class GDStudentPath(GoogleDrivePath):
         similar = False
         matches = {}
         if self.path:
-            classof_path = f"ClassOf-{self.path_parts['ClassOf']}"
+            classof_path = f"Class Of-{self.path_parts['ClassOf']}"
             search_path = self.root/classof_path
             logging.info(f'checking for similar existing dirs in {search_path}')
             glob = f"*{self.path_parts['Student_Number']}*"
@@ -407,7 +407,7 @@ class GDStudentPath(GoogleDrivePath):
     
     @ClassOf.setter
     def ClassOf(self, ClassOf):
-        '''string representation of projected graduation date in format: "ClassOf-YYYY"
+        '''string representation of projected graduation date in format: "Class Of-YYYY"
         
         Properties Set:
             path_parts(`dict`): dictionary of component parts of path'''
@@ -418,7 +418,7 @@ class GDStudentPath(GoogleDrivePath):
             ClassOf = int(ClassOf)
             if not isinstance(ClassOf, int):
                 raise TypeError('class_of must be of type `int`')
-        self.path_parts['ClassOf'] = f'ClassOf-{ClassOf}'
+        self.path_parts['ClassOf'] = f'Class Of-{ClassOf}'
         self.path_parts['ClassOf'] = ClassOf
         self._set_path()
         
