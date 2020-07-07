@@ -55,10 +55,40 @@ student_dirs = ['00-Preschool',
                 '11-Grade',
                 '12-Grade']
 
-# output format strings #
-#########################
+# csv output #
+##############
+# date format YYYY-MM-DD_HH:MM:SS
+date_format = "%Y-%m-%d_%H.%M.%S"
 
-## CSV output strings
-# URL formatter
-url_format = '<a href={}>Right click link and *Open Link in New Tab* to view student folder</a>'
+# default output path
+csv_output_path = Path('~/Desktop/').expanduser()
+# default csv filename
+csv_output_name = 'Portfolio_Links_for_PowerSchool_{date}.tsv.txt'
 
+# CSV output dictionary - property name, format string for csv
+csv_output_headers = {'LastFirst': '"{val}"',
+                      'ClassOf': '{val}',
+                      'Student_Number': '{val}',
+                      'webview_link': '<a href={val}>Right click link and *Open Link in New Tab* to view student folder</a>'
+                      }
+
+
+
+# ERROR CSV output dictionary:
+csv_error_name = 'Portfolio_Folder_ERRORS_for_review_{date}.csv'
+csv_error_headers = dict(csv_output_headers)
+csv_error_headers.update({'error': '{val}', 'matches': '{val}'})
+
+# Strings ERROR output in CSV
+csv_error_strings = {'duplicate':
+                      'This Student_Number has an existing folder (see the "matches" column), but with a different LastFirst name. Correct the folder name using the webview_link.',
+                     'multiple':
+                      'Multiple folders exist for this Student_Number. THIS IS NNOT OK. You MUST do the following: 1) choose one of the existing folders. 2) move the contents of the other folders into this folder. 3) Delete the unneeded folders. Use the links in the "matches" column to locate the existing folders',
+                     'failed':
+                      f'This folder could not be created. Try again later. If the errors persist, check the log file: {log_file}',
+                     'other': 
+                      f'There was an unknown issue creating this folder. Try again later. If this error persists, check the log file: {log_file}',
+                     'created': '',
+                     'subdirs': '',
+                     'exist': ''
+                      }
