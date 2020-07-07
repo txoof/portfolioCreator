@@ -1,4 +1,5 @@
 Pipfile.lock
 *.text
+*.csv
 student.export*
 rubish/*
