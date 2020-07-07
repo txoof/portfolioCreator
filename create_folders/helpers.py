@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[18]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
@@ -10,7 +10,7 @@
 
 
 
-# In[19]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -37,7 +37,7 @@ from pathlib import Path
 
 
 
-# In[ ]:
+# In[5]:
 
 
 def do_exit(e='unknown error in unknown module: BSoD!', exit_status=99):
@@ -55,7 +55,7 @@ def do_exit(e='unknown error in unknown module: BSoD!', exit_status=99):
 
 
 
-# In[ ]:
+# In[28]:
 
 
 def csv_to_list(file):
@@ -69,7 +69,8 @@ def csv_to_list(file):
     file_csv = []
     # try to figure out the dialect (csv, tsv, etc.)
     with open(csvFile, 'r') as file:
-        dialect = csv.Sniffer().sniff(file.read(1024))
+#         dialect = csv.Sniffer().sniff(file.read(1024))
+        dialect = csv.Sniffer().sniff(file.readline())
         file.seek(0)
         reader = csv.reader(file, dialect)
         for row in reader:
