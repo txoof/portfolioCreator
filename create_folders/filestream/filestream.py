@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[50]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert filestream.ipynb ./filestream')
@@ -10,7 +10,7 @@
 
 
 
-# In[51]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -18,7 +18,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 import logging
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[16]:
+# In[ ]:
 
 
 import class_constants
@@ -38,7 +38,7 @@ import os
 
 
 
-# In[26]:
+# In[ ]:
 
 
 class GoogleDrivePath():
@@ -173,7 +173,7 @@ class GoogleDrivePath():
             path = Path(path).absolute()
             
         attributes = []
-        if not self.path.exists():
+        if not path.exists():
             raise FileNotFoundError(self.path)
 
         p = subprocess.Popen(f'xattr -p  {attribute} "{path.resolve()}"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -292,7 +292,7 @@ class GoogleDrivePath():
 
 
 
-# In[18]:
+# In[ ]:
 
 
 class GDStudentPath(GoogleDrivePath):
@@ -313,9 +313,12 @@ class GDStudentPath(GoogleDrivePath):
             LastFirst(`str`): "Last, First" string representation of student name
             Student_Number(`int`): student id number
             matches(`dict`):  name and webview link of directories that contain "id_number"
+            duplicate(`bool`): True this object's Student_Number matches an existing record, 
+                but this object's LastFirst does not match one or more existing objects
             path_parts(`dict`): path compontents stored as dictionary keys'''
         super(GDStudentPath, self).__init__(path=root)
         self.matches = {}
+        self.duplicate = False
         self.path_parts = {'ClassOf': None, 'Student_Number': None, 'LastFirst': None}
         self.ClassOf = ClassOf
         self.LastFirst = LastFirst
@@ -371,15 +374,30 @@ class GDStudentPath(GoogleDrivePath):
         if self.path:
             classof_path = f"ClassOf-{self.path_parts['ClassOf']}"
             search_path = self.root/classof_path
+            logging.info(f'checking for similar existing dirs in {search_path}')
             glob = f"*{self.path_parts['Student_Number']}*"
             for i in search_path.glob(glob):
+                logging.debug(f'examining {search_path/i}')
                 match_id = self.get_xattr('user.drive.id', search_path/i)
                 if i.absolute().is_dir():
                     url = '/'.join((self._dir_base, match_id[0]))
                 else:
                     url = '/'.join((self._file_base, match_id[0]))
                 matches[str(i)] = url
-            self.matches = matches
+            
+        
+        # multiple matches are found; indicates there exist multiple duplicate records
+        if len(matches) > 1:
+            logging.warning(f'{len(matches)} exist')
+            self.duplicate = True
+
+        # a match is found and self.path does not exist indicates that this is a duplicate record, but 
+        # with a name chagne eg. exists: Doe, Jon - 123456 and this record is Doe, John - 123456
+        if (len(matches) == 1) and (not self.exists()):
+            logging.warning(f'Student_Number: "{self.Student_Number}" matches existing object: {matches}')
+            logging.warning(f'this object appears to be a duplicate')
+            self.duplicate = True
+        self.matches = matches
         return matches
     
     
@@ -490,5 +508,13 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
