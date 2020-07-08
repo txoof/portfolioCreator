@@ -13,7 +13,7 @@
 
 
 
-# In[7]:
+# In[49]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[5]:
+# In[50]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -53,7 +53,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[10]:
+# In[51]:
 
 
 # import csv
@@ -66,6 +66,8 @@ import os
 import glob
 
 from datetime import datetime
+
+import PySimpleGUI as sg
 
 
 
@@ -460,7 +462,36 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[47]:
+# In[63]:
+
+
+def window_drive_path():
+    drive_path = sg.Window(constants.app_name,
+                          [[sg.Text ('Choose the Google Shared Drive and folder that contains student cummulative folders.')],
+                                     [sg.In(), sg.FolderBrowse()],
+                                     [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
+    return Path(drive_path)
+
+
+
+
+# In[71]:
+
+
+'-f' in sys.argv
+
+
+
+
+# In[72]:
+
+
+sys.argv
+
+
+
+
+# In[65]:
 
 
 def main():    
@@ -468,6 +499,16 @@ def main():
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
 
+    if sys.argv == 1:
+        run_gui = True
+    else:
+        run_gui = True
+    
+    
+    if '-f' in sys.argv:
+        logging.warning
+        run_gui = True
+    
     # base configuration fle
     config_file = Path(constants.config_file)
     # user config file (~/.config/app_name/app.ini)
@@ -485,6 +526,19 @@ def main():
     config = ArgConfigParse.merge_dict(cfg_files_dict, cmd_args_dict)
     
 #     return config
+    
+    # launch a window for monitoring stdout if run_gui
+    if run_gui:
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
+        pass
+    
+    
+    # get drive_path through gui if needed
+    if not config['main']['drive_path'] and run_gui:
+        logging.debug('launching GUI folder browser')
+        ret_drive_path = window_drive_path()
+        if not ret_drive_path:
+            do_exit('You must specify a Google Shared drive to proceed.', 1)
 
     if config['__cmd_line']['version']:
         print(f'{constants.app_name} version:{constants.version}')
@@ -588,7 +642,7 @@ def main():
 
 
 
-# In[48]:
+# In[66]:
 
 
 if __name__ == '__main__':

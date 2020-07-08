@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[30]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
@@ -10,7 +10,7 @@
 
 
 
-# In[32]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -33,11 +33,12 @@ logger = logging.getLogger(__name__)
 import sys
 import csv
 from pathlib import Path
+import PySimpleGUI as sg
 
 
 
 
-# In[5]:
+# In[ ]:
 
 
 def do_exit(e='unknown error in unknown module: BSoD!', exit_status=99):
@@ -50,12 +51,13 @@ def do_exit(e='unknown error in unknown module: BSoD!', exit_status=99):
     elif exit_status > 1:
         logging.error(f'fatal error:\n\t{e}')
     print(e)
+#     sg.PrintClose()
     sys.exit(exit_status)
 
 
 
 
-# In[28]:
+# In[ ]:
 
 
 def csv_to_list(file):
@@ -197,7 +199,7 @@ def csv_writer(rows_list, path):
 
 
 
-# In[34]:
+# In[ ]:
 
 
 def len_of_dict(my_set):
