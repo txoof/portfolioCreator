@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[30]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
@@ -10,7 +10,7 @@
 
 
 
-# In[ ]:
+# In[32]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -180,5 +180,31 @@ def adjust_handler(handler=None, new_level=None):
             logging.warning(f'handler: "{handler}" not found')
         
     return logging.getLogger().handlers
+
+
+
+
+# In[ ]:
+
+
+def csv_writer(rows_list, path):
+    logging.debug(f'writing csv file: {path}')
+    with open(path, 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        for each in rows_list:
+            writer.writerow(each)
+
+
+
+
+# In[34]:
+
+
+def len_of_dict(my_set):
+    '''calculate the overall length of a dict of list like objects'''
+    total = 0
+    for each_set in my_set:
+        total = total + len(my_set[each_set])
+    return total
 
 
