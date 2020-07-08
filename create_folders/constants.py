@@ -2,11 +2,11 @@ from pathlib import Path
 
 # basics #
 ##########
-version = '0.0.1'
+version = '0.1.00'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
-contact = 'aaron.ciuffo@gmail.com'
-git_repo = f'github.com/txoof/{app_name}'
+contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
+git_repo = f'https://github.com/txoof/{app_name}'
 
 # config files #
 ################
