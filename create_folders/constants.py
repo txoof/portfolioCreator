@@ -58,12 +58,12 @@ student_dirs = ['00-Preschool',
 # csv output #
 ##############
 # date format YYYY-MM-DD_HH:MM:SS
-date_format = "%Y-%m-%d_%H.%M.%S"
+date_format = "%Y-%m-%d_%H.%M"
 
 # default output path
-csv_output_path = Path('~/Desktop/').expanduser()
+csv_output_path = Path('~/Desktop/').expanduser()/app_name
 # default csv filename
-csv_output_name = 'Portfolio_Links_for_PowerSchool_{date}.tsv.txt'
+csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.csv.txt'
 
 # CSV output dictionary - property name, format string for csv
 csv_output_headers = {'LastFirst': '"{val}"',
@@ -72,10 +72,11 @@ csv_output_headers = {'LastFirst': '"{val}"',
                       'webview_link': '<a href={val}>Right click link and *Open Link in New Tab* to view student folder</a>'
                       }
 
-
+# invalid rows CSV 
+csv_invalid_name = '{date}_Portfolio_Invalid_Rows.csv'
 
 # ERROR CSV output dictionary:
-csv_error_name = 'Portfolio_Folder_ERRORS_for_review_{date}.csv'
+csv_error_name = '{date}_Portfolio_ERRORS.csv'
 csv_error_headers = dict(csv_output_headers)
 csv_error_headers.update({'error': '{val}', 'matches': '{val}'})
 
