@@ -9,6 +9,7 @@ verify_ssl = true
 ipykernel = "*"
 pysimplegui = "*"
 argconfigparse = "*"
+rich = "*"
 
 [requires]
 python_version = "3"

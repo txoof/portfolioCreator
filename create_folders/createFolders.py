@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[6]:
+# In[28]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[49]:
+# In[29]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[50]:
+# In[30]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -29,7 +29,7 @@
 
 
 
-# In[8]:
+# In[4]:
 
 
 import constants
@@ -43,7 +43,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[9]:
+# In[5]:
 
 
 from helpers import *
@@ -53,7 +53,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[51]:
+# In[26]:
 
 
 # import csv
@@ -68,11 +68,13 @@ import glob
 from datetime import datetime
 
 import PySimpleGUI as sg
+if sys.argv == 1:
+    print = sg.EasyPrint
 
 
 
 
-# In[34]:
+# In[7]:
 
 
 def parse_cmdargs():
@@ -98,7 +100,7 @@ def parse_cmdargs():
 
 
 
-# In[12]:
+# In[8]:
 
 
 def read_config(files):
@@ -117,7 +119,7 @@ def read_config(files):
 
 
 
-# In[26]:
+# In[9]:
 
 
 def check_drive_path(drive_path=None):
@@ -190,7 +192,7 @@ Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
 
 
 
-# In[27]:
+# In[10]:
 
 
 def create_folders(drive_path, valid_rows, header_map):
@@ -282,7 +284,7 @@ def create_folders(drive_path, valid_rows, header_map):
 
 
 
-# In[28]:
+# In[11]:
 
 
 def check_folders(directories):
@@ -347,7 +349,7 @@ def check_folders(directories):
 
 
 
-# In[29]:
+# In[12]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -462,7 +464,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[63]:
+# In[13]:
 
 
 def window_drive_path():
@@ -475,23 +477,7 @@ def window_drive_path():
 
 
 
-# In[71]:
-
-
-'-f' in sys.argv
-
-
-
-
-# In[72]:
-
-
-sys.argv
-
-
-
-
-# In[65]:
+# In[23]:
 
 
 def main():    
@@ -505,8 +491,9 @@ def main():
         run_gui = True
     
     
+    ##### REMOVE THIS!
     if '-f' in sys.argv:
-        logging.warning
+        logging.warning('Likely in jupyter environment -- remove this!')
         run_gui = True
     
     # base configuration fle
@@ -532,13 +519,15 @@ def main():
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
         pass
     
-    
     # get drive_path through gui if needed
     if not config['main']['drive_path'] and run_gui:
         logging.debug('launching GUI folder browser')
         ret_drive_path = window_drive_path()
         if not ret_drive_path:
             do_exit('You must specify a Google Shared drive to proceed.', 1)
+        else:
+            config['main']['drive_path'] = ret_drive_path
+            update_user_config = True
 
     if config['__cmd_line']['version']:
         print(f'{constants.app_name} version:{constants.version}')
@@ -573,6 +562,9 @@ def main():
     if not drive_status[0]:
         do_exit(drive_status[1], 1)
         # consider prompting user at this point to enter a valid drive
+    
+    if not csv_file and run_gui:
+        csv_file = Path(sg.popup_get_file('Select a Student Export File to Process'))
     
     # read CSV into a list
     if not csv_file:
@@ -636,13 +628,16 @@ def main():
         print(f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again')
     if len(invalid_rows) > 1:
         print(f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.')  
-              
+    
+    logging.debug('done')
+    # final print
+    print('.')
     return valid_rows, invalid_rows
 
 
 
 
-# In[66]:
+# In[27]:
 
 
 if __name__ == '__main__':
@@ -660,7 +655,7 @@ if __name__ == '__main__':
 
 
 
-# In[20]:
+# In[ ]:
 
 
 # # sys.argv.append('-g')
