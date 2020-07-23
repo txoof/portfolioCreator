@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -14,7 +14,7 @@
 
 
 
-# In[2]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -484,6 +484,31 @@ def window_drive_path():
 # In[14]:
 
 
+class multi_line_string():
+    def __init__(self, s=''):
+        self._string = ''
+        self.string = s
+    
+    def __str__(self):
+        return self.string
+    
+    @property
+    def string(self):
+        return self._string
+    
+    @string.setter
+    def string (self, s):
+        self._string = self._string + s + '\n'
+        
+        
+    
+
+
+
+
+# In[15]:
+
+
 def main():    
     # set the local logger
     logger = logging.getLogger(__name__)
@@ -497,7 +522,7 @@ def main():
     
     ##### REMOVE THIS!
     if '-f' in sys.argv:
-        logging.warning('Likely in jupyter environment -- remove this!')
+        print('Likely in jupyter environment -- remove this!')
         run_gui = True
     
     # base configuration fle
@@ -632,29 +657,41 @@ def main():
     len_unconfirmed = len_of_dict(unconfirmed_dirs)
             
     # Add a summary output:
-    print('********* Summary **********')
-    print(f'Processed {len(csv_list)-1} student records from "{csv_file}"')
-    print(f'{len(valid_rows)} records contained valid data and were processed.')
+    s = multi_line_string()
+#     print('********* Summary **********')
+    s.string = '********* Summary **********'
+#     print(f'Processed {len(csv_list)-1} student records from "{csv_file}"')
+    s.string = f'Processed {len(csv_list)-1} student records from "{csv_file}"'
+#     print(f'{len(valid_rows)} records contained valid data and were processed.')
+    s.string = f'{len(valid_rows)} records contained valid data and were processed.'
     if len(invalid_rows) > 1:
-        print(f'{len(invalid_rows)-1} records contained invalid data and could not be used')
-    print(f'\n')
+#         print(f'{len(invalid_rows)-1} records contained invalid data and could not be used')
+        s.string = f'{len(invalid_rows)-1} records contained invalid data and could not be used\n'
+#     print(f'\n')
 
     if len_confirmed > 0:
-        print(f'Succesfully created or validated folders are stored in: \n{csv_files["confirmed"]}\n\tShare this file with the PowerSchool Administrator\n')
+#         print(f'Succesfully created or validated folders are stored in: \n{csv_files["confirmed"]}\n\tShare this file with the PowerSchool Administrator\n')
+        s.string = f'Succesfully created or validated folders are stored in: \n{csv_files["confirmed"]}\n\tShare this file with the PowerSchool Administrator\n'
     if len_unconfirmed > 0:
-        print(f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again')
+#         print(f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again')
+        s.string = f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again'
     if len(invalid_rows) > 1:
-        print(f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.')  
-    
+        s.string = f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.'
+#         print(f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.')  
+    sg.popup(s)
     logging.debug('done')
     # final print
     print('.')
+
+    if run_gui:
+        sg.easy_print_close()
+
     return valid_rows, invalid_rows
 
 
 
 
-# In[15]:
+# In[17]:
 
 
 if __name__ == '__main__':
@@ -662,8 +699,6 @@ if __name__ == '__main__':
         print = sg.Print
         print('running gui')
     f = main()
-    window.close()
-    sg.easy_print_close()
 
 
 
