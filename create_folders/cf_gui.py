@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#!/usr/bin/env python
 # coding: utf-8
 
 
@@ -21,7 +22,7 @@ from rich.markdown import Markdown
 
 
 
-# In[12]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert cf_gui.ipynb')
@@ -29,7 +30,7 @@ from rich.markdown import Markdown
 
 
 
-# In[30]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -37,7 +38,7 @@ from rich.markdown import Markdown
 
 
 
-# In[25]:
+# In[4]:
 
 
 def main(r=10):
@@ -49,7 +50,7 @@ def main(r=10):
 
 
 
-# In[26]:
+# In[5]:
 
 
 def hep():
@@ -62,7 +63,7 @@ def hep():
 
 
 
-# In[29]:
+# In[6]:
 
 
 def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
@@ -72,7 +73,7 @@ def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font=
 
 layout =[ [text_fmt('Portfolio Creator')],
           [sg.Text('description\nfoo\nbar', font='Courier 11')],
-          [sg.Output(size=(100, 50), font='Courier 15')],
+          [sg.Output(size=(80, 50), font='Courier 12')],
           [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
 ]
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+#!/usr/bin/env python
 # coding: utf-8
 
 
-# In[28]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +14,7 @@
 
 
 
-# In[29]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -21,7 +22,7 @@
 
 
 
-# In[30]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -53,7 +54,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[26]:
+# In[6]:
 
 
 # import csv
@@ -68,8 +69,6 @@ import glob
 from datetime import datetime
 
 import PySimpleGUI as sg
-if sys.argv == 1:
-    print = sg.EasyPrint
 
 
 
@@ -202,6 +201,9 @@ def create_folders(drive_path, valid_rows, header_map):
     directories = {'created': [], 'exist': [], 'duplicate': [], 'failed': [], 'multiple': [], 'subdirs': []}
     directories_to_check = []
 
+    total = len(valid_rows)
+    remaining = len(valid_rows)
+    print(f'{total} will be checked and created if needed')
     
     def make_subdirs(student_dir):
         '''helper function to create multiple child directories in `student_dir`
@@ -232,6 +234,7 @@ def create_folders(drive_path, valid_rows, header_map):
 
     
     # build a list of GDStudentPath objects to check for existence/creation
+    
     logging.info(f'processing {len(valid_rows)} rows')
     for student in valid_rows:
         class_of = student[header_map['ClassOf']]
@@ -243,9 +246,9 @@ def create_folders(drive_path, valid_rows, header_map):
     
     # check for similar directories
     for directory in directories_to_check:
+        print(f'{remaining} of {total} folders to be processed')
         logging.debug(f'checking for existing dirs with student number: {directory.Student_Number}')
         directory.check_similar()
-        
         # new directories
         if len(directory.matches) == 0:
             logging.debug(f'creating new directory for {directory.LastFirst}')
@@ -278,6 +281,8 @@ def create_folders(drive_path, valid_rows, header_map):
             logging.warning(f'{len(directory.matches)} existing directories found for {directory.LastFirst}; this is NOT OK')            
             logging.info('this directory will not be created')            
             directories['multiple'].append(directory) 
+        remaining = remaining - 1
+
                 
     return directories
 
@@ -301,7 +306,6 @@ def check_folders(directories):
     confirm_retry = constants.confirm_retry
     #  wait N seconds for first try, N*retry for each subsiquent retry
     base_wait = constants.base_wait  
-    base_wait = 4
     checks_complete = False
     
     sets_to_check = ['created', 'subdirs', 'exist']
@@ -477,7 +481,7 @@ def window_drive_path():
 
 
 
-# In[23]:
+# In[14]:
 
 
 def main():    
@@ -570,6 +574,7 @@ def main():
     if not csv_file:
         do_exit('No student export CSV file specified. Exiting.', 1)
     try:
+        print(f'\nProcessing {csv_file} file...')
         csv_list = csv_to_list(csv_file)
     except (FileNotFoundError, OSError, IOError, TypeError) as e:
         logging.error(f'could not read csv file: {csv_file}')
@@ -577,9 +582,12 @@ def main():
         do_exit(e, 1)
     except csv.Error as e:
         logging.error(f'e')
-        do_exit(f'{e} of file "{csv_file}". Make sure to use the field delimter "Comma" when preparing the export', 1)
+        do_exit(f'{e} of file "{csv_file}". Try using the field delimiter "Comma" when preparing the export', 1)
+    finally:
+        print(f'file successfully read ')
     
-    # map the expecdted headers to the appropriate columns
+    # map the expected headers to the appropriate columns
+    print(f'checking for appropriate column headers')
     header_map, missing_headers = map_headers(csv_list, expected_headers.keys())
     
     # error out if there are any missing headers in the export file
@@ -587,17 +595,26 @@ def main():
         do_exit(f'{csv_file.name} is missing one or more headers:\n\t{missing_headers}\nprogram cannot continue', 1)
     
     # validate the csv list
+    print(f'checking rows for invalid data')
     valid_rows, invalid_rows = validate_data(csv_list, expected_headers, header_map)
+    print(f'{len(valid_rows)} student rows were found')
+    print(f'{len(invalid_rows)} improperly formated student rows were found')
+    
+    # FIX ME add checks here for bad valid_rows, invalid rows
     
     # insert the headers to the invalid rows list for output later
     invalid_rows.insert(0, csv_list[0])
     
 #     return valid_rows, invalid_rows, header_map
     
+    print(f'\nPreparing to create student folders for {len(valid_rows)} students')
+    print(f'using Google Shared Drive: {drive_path}')
+    print(f'this could take a while...')
     directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map)
     
+    print(f'checking that {len(directories)} student folders were properly created in the cloud')
     confirmed_dirs, unconfirmed_dirs = check_folders(directories)
-    
+    print(f'{len(confirmed_dirs)} were confirmed; {len(unconfirmed_dirs)} could not be confirmed')
 #     return confirmed_dirs, unconfirmed_dirs
 
     csv_files = write_csv(confirmed_dirs, unconfirmed_dirs, invalid_rows)
@@ -637,11 +654,16 @@ def main():
 
 
 
-# In[27]:
+# In[15]:
 
 
 if __name__ == '__main__':
+    if '-f' in sys.argv:
+        print = sg.Print
+        print('running gui')
     f = main()
+    window.close()
+    sg.easy_print_close()
 
 
 
