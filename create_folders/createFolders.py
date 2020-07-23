@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[18]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -14,7 +14,7 @@
 
 
 
-# In[3]:
+# In[19]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[ ]:
+# In[24]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -514,16 +514,18 @@ def main():
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
 
-    if sys.argv == 1:
+    if len(sys.argv) <= 1:
         run_gui = True
+        logging.debug('running in interactive mode')
     else:
-        run_gui = True
+        run_gui = False
     
     
     ##### REMOVE THIS!
     if '-f' in sys.argv:
         print('Likely in jupyter environment -- remove this!')
         run_gui = True
+        
     
     # base configuration fle
     config_file = Path(constants.config_file)
@@ -546,7 +548,6 @@ def main():
     # launch a window for monitoring stdout if run_gui
     if run_gui:
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
-        pass
     
     # get drive_path through gui if needed
     if not config['main']['drive_path'] and run_gui:
@@ -695,6 +696,9 @@ def main():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) <= 1:
+        print = sg.Print
+
     if '-f' in sys.argv:
         print = sg.Print
         print('running gui')
