@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[18]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -14,7 +14,7 @@
 
 
 
-# In[19]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[24]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -30,7 +30,7 @@
 
 
 
-# In[4]:
+# In[23]:
 
 
 import constants
@@ -44,7 +44,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[5]:
+# In[24]:
 
 
 from helpers import *
@@ -54,7 +54,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[6]:
+# In[25]:
 
 
 # import csv
@@ -73,7 +73,7 @@ import PySimpleGUI as sg
 
 
 
-# In[7]:
+# In[26]:
 
 
 def parse_cmdargs():
@@ -99,7 +99,7 @@ def parse_cmdargs():
 
 
 
-# In[8]:
+# In[27]:
 
 
 def read_config(files):
@@ -118,7 +118,7 @@ def read_config(files):
 
 
 
-# In[9]:
+# In[28]:
 
 
 def check_drive_path(drive_path=None):
@@ -191,7 +191,7 @@ Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
 
 
 
-# In[10]:
+# In[29]:
 
 
 def create_folders(drive_path, valid_rows, header_map):
@@ -289,7 +289,7 @@ def create_folders(drive_path, valid_rows, header_map):
 
 
 
-# In[11]:
+# In[30]:
 
 
 def check_folders(directories):
@@ -353,7 +353,7 @@ def check_folders(directories):
 
 
 
-# In[12]:
+# In[31]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -468,7 +468,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[13]:
+# In[32]:
 
 
 def window_drive_path():
@@ -481,10 +481,18 @@ def window_drive_path():
 
 
 
-# In[14]:
+# In[33]:
 
 
 class multi_line_string():
+    '''multi-line string object 
+    
+    each time  multi_line_string.string is set equal to a string, it is added to 
+    the existing string with a new line character
+    
+    Properties:
+        string(`str`): string'''
+
     def __init__(self, s=''):
         self._string = ''
         self.string = s
@@ -500,13 +508,12 @@ class multi_line_string():
     def string (self, s):
         self._string = self._string + s + '\n'
         
-        
     
 
 
 
 
-# In[15]:
+# In[34]:
 
 
 def main():    
@@ -514,17 +521,17 @@ def main():
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
 
-    if len(sys.argv) <= 1:
-        run_gui = True
-        logging.debug('running in interactive mode')
-    else:
-        run_gui = False
+#     if len(sys.argv) <= 1:
+#         run_gui = True
+#         logging.debug('running in interactive mode')
+#     else:
+#         run_gui = False
     
     
-    ##### REMOVE THIS!
-    if '-f' in sys.argv:
-        print('Likely in jupyter environment -- remove this!')
-        run_gui = True
+#     ##### REMOVE THIS!
+#     if '-f' in sys.argv:
+#         print('Likely in jupyter environment -- remove this!')
+#         run_gui = True
         
     
     # base configuration fle
@@ -546,8 +553,8 @@ def main():
 #     return config
     
     # launch a window for monitoring stdout if run_gui
-    if run_gui:
-        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
+#     if run_gui:
+#         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
     
     # get drive_path through gui if needed
     if not config['main']['drive_path'] and run_gui:
@@ -684,30 +691,75 @@ def main():
     # final print
     print('.')
 
-    if run_gui:
-        sg.easy_print_close()
+#     if run_gui:
+#         sg.easy_print_close()
 
     return valid_rows, invalid_rows
 
 
 
 
-# In[17]:
+# In[35]:
+
+
+def print_help():
+    print('help here')
+    pass
+
+
+
+
+# In[36]:
 
 
 if __name__ == '__main__':
+    run_gui = False
     if len(sys.argv) <= 1:
-        print = sg.Print
+#         print = sg.Print
+        run_gui = True
 
     if '-f' in sys.argv:
-        print = sg.Print
-        print('running gui')
-    f = main()
+#         print = sg.Print
+        run_gui = True
+        
+
+    
+#     f = main()
+    if run_gui:
+        def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
+        layout =[ [text_fmt('Cumulative Portfolio Creator')],
+          [sg.Text('Create Cumulative Folders on Google Shared Drive', font='Courier 11')],
+          [sg.Output(size=(80, 50), font='Courier 12')],
+          [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
+                ]
+                 
+        window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
+                 
+        while True:
+            window.finalize()
+            window.BringToFront()
+            (event, value) = window.read()
+
+
+
+            if event == 'EXIT' or event == sg.WIN_CLOSED:
+                break
+            if event == 'GO':
+                main()
+        #         window.Refresh()
+            if event == 'Help':
+        #         sg.popup_scrolled('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla faucibus bibendum pharetra. Sed ut sapien orci. Nulla tempor elementum ullamcorper. Ut turpis tellus, tempor nec placerat tristique, maximus ut magna. Morbi urna lorem, eleifend vitae risus eu, aliquet scelerisque diam. Vivamus dignissim, mauris nec rhoncus sollicitudin, neque urna molestie sapien, a pulvinar ipsum justo id lacus. Fusce neque eros, viverra eu porta non, eleifend eget massa.')
+                print_help()
+        window.close()
+        sg.easy_print_close()
+
+    else:
+        main()
 
 
 
 
-# In[ ]:
+# In[18]:
 
 
 # adjust_handler('*', 'DEBUG')
@@ -716,7 +768,7 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
+# In[19]:
 
 
 # # sys.argv.append('-g')
@@ -738,7 +790,7 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
+# In[20]:
 
 
 # sys.argv.pop()
@@ -748,7 +800,7 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
+# In[21]:
 
 
 # sys.argv
