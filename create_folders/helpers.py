@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
@@ -10,7 +10,7 @@
 
 
 
-# In[ ]:
+# In[20]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -18,7 +18,7 @@
 
 
 
-# In[ ]:
+# In[12]:
 
 
 import logging
@@ -27,13 +27,45 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[ ]:
+# In[13]:
 
 
 import sys
 import csv
 from pathlib import Path
-import PySimpleGUI as sg
+# import PySimpleGUI as sg
+
+
+
+
+# In[22]:
+
+
+def do_exit(e='unknown error in unknown module!', exit_status=99, ret_value=None):
+    help_msg = f'try:\n{sys.argv[0]} -h for help'
+    def hard_exit():
+        print(e)
+        sys.exit(exit_status)
+        
+    def soft_exit():
+        print(e)
+        return(e)
+    
+    if exit_status > 1:
+        logging.error(f'fatal error:\n\t{e}')
+        return(hard_exit)
+    
+    if exit_status == 1:
+        logging.warning(f'exited before completion with code {exit_status}')
+        logging.warning(e)
+        print(help_msg)
+        return(soft_exit)
+    
+    if exit_status < 1:
+        logging.debug(e)
+        return(soft_exit)
+        
+    
 
 
 
@@ -41,18 +73,18 @@ import PySimpleGUI as sg
 # In[ ]:
 
 
-def do_exit(e='unknown error in unknown module: BSoD!', exit_status=99):
+# def do_exit(e='unknown error in unknown module!', exit_status=99):
 
         
-    print('\n'*4)
-    if exit_status == 1:
-        logging.warning(f'exited before completion with exit code {exit_status}')
-        logging.warning(e)  
-    elif exit_status > 1:
-        logging.error(f'fatal error:\n\t{e}')
-    print(e)
-#     sg.PrintClose()
-    sys.exit(exit_status)
+#     print('\n'*4)
+#     if exit_status == 1:
+#         logging.warning(f'exited before completion with exit code {exit_status}')
+#         logging.warning(e)  
+#     elif exit_status > 1:
+#         logging.error(f'fatal error:\n\t{e}')
+#     print(e)
+# #     sg.PrintClose()
+#     sys.exit(exit_status)
 
 
 
