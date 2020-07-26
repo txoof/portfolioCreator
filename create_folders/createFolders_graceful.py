@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[17]:
+# In[9]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,23 +13,16 @@
 
 
 
-# In[18]:
+# In[2]:
 
 
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
-
-
-
-
-# In[ ]:
-
-
+#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
 #get_ipython().run_line_magic('nb_convert', '')
 
 
 
 
-# In[19]:
+# In[10]:
 
 
 import constants
@@ -43,7 +36,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[20]:
+# In[11]:
 
 
 from helpers import *
@@ -53,26 +46,22 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[21]:
+# In[16]:
 
 
-# import csv
 import sys
 from pathlib import Path
-# import subprocess
 import time
 import ArgConfigParse
 import os
 import glob
-
 from datetime import datetime
-
 import PySimpleGUI as sg
 
 
 
 
-# In[22]:
+# In[17]:
 
 
 def parse_cmdargs():
@@ -98,7 +87,7 @@ def parse_cmdargs():
 
 
 
-# In[23]:
+# In[18]:
 
 
 def read_config(files):
@@ -117,7 +106,7 @@ def read_config(files):
 
 
 
-# In[24]:
+# In[19]:
 
 
 def check_drive_path(drive_path=None):
@@ -190,105 +179,80 @@ Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
 
 
 
-# In[25]:
+# In[20]:
 
 
-def create_folders(drive_path, valid_rows, header_map):
-    logging.info(f'creating folders as needed in {drive_path}')
-    grade_level_dirs = constants.student_dirs
+def check_drive_path(drive_path=None):
+    '''check that path is a valid google drive path and contains the appropriate sentry file
     
-    directories = {'created': [], 'exist': [], 'duplicate': [], 'failed': [], 'multiple': [], 'subdirs': []}
-    directories_to_check = []
+    Args:
+        drive_path(`str`): path to google drive containg cummulative folders and sentry file
+    
+    Retruns:
+        `tuple` of `bool`, `str`: When true, drive is OK; when false, drive is not valid; str contains errors'''
+    # this is super redundant -- checks the following:
+    # * is a path
+    # * is a google drive path
+    # * if sentry file exists
+    # this may be a good idea considering how some users have run into many problems with this
 
-    total = len(valid_rows)
-    remaining = len(valid_rows)
-    print(f'{total} will be checked and created if needed')
+    drive_ok = True
+    msg = None
+    if not drive_path:
+        logging.info('no google drive specified')
+        drive_ok = False
+        msg = 'No Google Drive specified'
+        return drive_ok, msg
+    else:
+        drive_path = Path(drive_path)
     
-    def make_subdirs(student_dir):
-        '''helper function to create multiple child directories in `student_dir`
-        
-        Args:
-            student_dir(`GDStudent`): parent for child directories
-        
-        Returns:
-            None'''
-        logging.debug(f'checking grade level dirs for {student_dir}')
-        for gld in grade_level_dirs:
-            subdir = student_dir.mkchild(gld, exist_ok=True)
-            if not subdir.exists():
-                try:
-                    subdir.mkdir()
-                except (OSError, FileNotFoundError) as e:
-                    logging.warning(f'error creating grade level directory: {gld}: {e}')
-                    directories['failed'].append(subdir)
-                else:
-                    directories['subdirs'].append(subdir)
-            else:
-                if not subdir.confirm():
-                    logging.debug(f'exists, but is not confirmed: {subdir}')
-                    directories['subdirs'].append(subdir)
-#         return ok, failed
-                
+    if not drive_path.exists():
+        logging.warning(f'specified path "{drive_path}" does not exist')
+        drive_ok = False
+        msg = f'The Google Drive "{drive_path}" does not appear to exist on Google Drive'
+        return drive_ok, msg
+    else:
+        google_drive = GoogleDrivePath(drive_path)
     
+    try:
+        google_drive.get_xattr('user.drive.id')
+    except ChildProcessError as e:
+        logging.warning(f'specified path "{drive_path}" is not a Google Drive path')
+        msg = f'The Google Drive "{drive_path}" does not appear to be a valid google Shared Drive'
+        drive_ok = False
+        return drive_ok, msg
 
+    sentry_file = constants.sentry_file    
+    sentry_file_path = drive_path/Path(sentry_file)
     
-    # build a list of GDStudentPath objects to check for existence/creation
-    
-    logging.info(f'processing {len(valid_rows)} rows')
-    for student in valid_rows:
-        class_of = student[header_map['ClassOf']]
-        last_first = student[header_map['LastFirst']]
-        student_number = student[header_map['Student_Number']]
-        logging.debug(f'class: {class_of}, lastfirst: {last_first}, student number: {student_number}')
-        directories_to_check.append(GDStudentPath(drive_path, ClassOf=class_of, Student_Number=student_number, LastFirst=last_first))
-    
-    
-    # check for similar directories
-    for directory in directories_to_check:
-        print(f'{remaining} of {total} folders to be processed')
-        logging.debug(f'checking for existing dirs with student number: {directory.Student_Number}')
-        directory.check_similar()
-        # new directories
-        if len(directory.matches) == 0:
-            logging.debug(f'creating new directory for {directory.LastFirst}')
-            try:
-                directory.mkdir()
-            except (OSError, FileNotFoundError) as e:
-                logging.warning(f'error creating directory: {directory.path}: {e}')
-                directories['failed'].append(directory)
-            else:
-                directories['created'].append(directory)
-            
-            # queue subdirs for creation
-            make_subdirs(directory)
-                    
-        # existing directories           
-        if len(directory.matches) == 1 and not directory.duplicate:
-            logging.debug(f'existing directory for {directory.LastFirst}, this is OK')
-            directories['exist'].append(directory)
-            # queue subdirs for creation
-            make_subdirs(directory)
-        
-        if len(directory.matches) == 1 and directory.duplicate:
-            logging.warning(f'a directory already exists with a different LastFirst, but the same Student_Number; this is NOT OK')
-            logging.info('this directory will not be created')
-            directories['duplicate'].append(directory)
-            
-    
-        # directories that have multiple matches
-        if len(directory.matches) > 1:
-            logging.warning(f'{len(directory.matches)} existing directories found for {directory.LastFirst}; this is NOT OK')            
-            logging.info('this directory will not be created')            
-            directories['multiple'].append(directory) 
-        remaining = remaining - 1
+    if not sentry_file_path.is_file():
+        logging.warning(f'sentry file is missing in specified path "{drive_path}"')
+        msg = f'''The chosen google shared drive "{drive_path}"
+does not appear to be a Cumulative Student Folder. 
 
-                
-    return directories
+The file: "{sentry_file}" is missing. 
+If you are sure {drive_path} is correct, 
+please contact IT Support and askfor help. 
+
+Please screenshot or copy this entire text below and provide it to IT Support.
+
+###############################################################################
+Run the command below from the terminal of the user that submitted this ticket.
+This command will create the necessary files for this script. 
+
+Confirm that {drive_path} is the correct
+Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
+     $ touch {drive_path}/{sentry_file}'''
+        drive_ok = False
+    
+    
+    
+    return drive_ok, msg
 
 
 
 
-# In[26]:
+# In[21]:
 
 
 def check_folders(directories):
@@ -352,7 +316,7 @@ def check_folders(directories):
 
 
 
-# In[27]:
+# In[22]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -467,15 +431,54 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[28]:
+# In[23]:
 
 
 def window_drive_path():
+    '''launch an interactive window to ask user to specify a google drive shared folder'''
     drive_path = sg.Window(constants.app_name,
                           [[sg.Text ('Choose the Google Shared Drive and folder that contains student cummulative folders.')],
                                      [sg.In(), sg.FolderBrowse()],
                                      [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
-    return Path(drive_path)
+    
+    if drive_path:
+        drive_path = Path(drive_path)
+    else: 
+        drive_path = None
+        logging.info('no drive path selected')
+        
+    return drive_path
+
+
+
+
+# In[24]:
+
+
+def window_csv_file():
+    '''launch an interactive window to ask user to specify a student export file'''
+#     student_export = sg.Window(constants.app_name,
+#                           [[sg.Text ('Choose a student.export.text file to process')],
+#                                      [sg.In(), sg.FolderBrowse()],
+#                                      [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
+    csv_file = sg.popup_get_file('Select a Student Export File to Process')
+    
+    if csv_file:
+        csv_file = Path(csv_file)
+    else: 
+        csv_file = None
+        logging.info('no student_export path selected')
+        
+    return csv_file
+
+
+
+
+# In[25]:
+
+
+def print_help():
+    print('this is the help')
 
 
 
@@ -483,55 +486,10 @@ def window_drive_path():
 # In[29]:
 
 
-class multi_line_string():
-    '''multi-line string object 
-    
-    each time  multi_line_string.string is set equal to a string, it is added to 
-    the existing string with a new line character
-    
-    Properties:
-        string(`str`): string'''
-
-    def __init__(self, s=''):
-        self._string = ''
-        self.string = s
-    
-    def __str__(self):
-        return self.string
-    
-    @property
-    def string(self):
-        return self._string
-    
-    @string.setter
-    def string (self, s):
-        self._string = self._string + s + '\n'
-        
-    
-
-
-
-
-# In[30]:
-
-
-def main():    
+def main_program(interactive=False):
     # set the local logger
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
-
-#     if len(sys.argv) <= 1:
-#         run_gui = True
-#         logging.debug('running in interactive mode')
-#     else:
-#         run_gui = False
-    
-    
-#     ##### REMOVE THIS!
-#     if '-f' in sys.argv:
-#         print('Likely in jupyter environment -- remove this!')
-#         run_gui = True
-        
     
     # base configuration fle
     config_file = Path(constants.config_file)
@@ -547,245 +505,90 @@ def main():
     cfg_files_dict = read_config([constants.config_file, constants.user_config_path])
 
     # merge the command line arguments and the config files; cmd line overwrites files
-    config = ArgConfigParse.merge_dict(cfg_files_dict, cmd_args_dict)
+    config = ArgConfigParse.merge_dict(cfg_files_dict, cmd_args_dict)    
     
-#     return config
-    
-    # launch a window for monitoring stdout if run_gui
-#     if run_gui:
-#         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
-    
-    # get drive_path through gui if needed 
-    # FIXME do_exit needs some help when running in gui mode
-    if not config['main']['drive_path'] and run_gui:
-        logging.debug('launching GUI folder browser')
-        ret_drive_path = window_drive_path()
-        if not ret_drive_path:
-            do_exit('You must specify a Google Shared drive to proceed.', 1)
-        else:
-            config['main']['drive_path'] = ret_drive_path
-            update_user_config = True
-    #FIXME do_exit needs some help here
     if config['__cmd_line']['version']:
-        print(f'{constants.app_name} version:{constants.version}')
-        print(f'Developer contact information:\n\t{constants.contact}\n\t{constants.git_repo}')
-        do_exit('', 0)
-
-    # adjust the logging levels if needed
+        logging.debug('display version and exit')
+        return do_exit(f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}', 0)
+    
+    # handle missing google shared drive paths
+    if not config['main']['drive_path']:
+        if interactive:
+            print('No Google Shared Drive has been set.')
+            print('Choose a Google Shared Drive that Contains Student Cumulative (portfolio) folders')
+            drive_path_interactive = window_drive_path()
+            if not drive_path_interactive: 
+                return do_exit('Please choose a Google Shared Drive to proceed', 0)
+            else:
+                config['main']['drive_path'] = drive_path_interactive
+                
+        if not interactive:
+            return (do_exit(f'Can not run without a Google Shared Drive Configured.\ntry:\n{sys.argv[0]} -h for help', 1))
+    
+    # adjust logging levels if needed
     if config['main']['log_level']:
         ll = config['main']['log_level']
         if ll in (['DEBUG', 'INFO', 'WARNING', 'ERROR']):
             logging.root.setLevel(ll)
-            handlers = adjust_handler('*', ll)
+            handlers = adjust_handler ('*', ll)
             logging.debug(f'adjusted log levels: {handlers} to {ll}')
         else:
             logging.warning(f'unknown or invalid log_level: {ll}')
-    
+
     # load file constants
     expected_headers = constants.expected_headers    
     student_dirs = constants.student_dirs
+          
+    # get csv_file and drive path
+    if interactive:
+        print('Select a student export file to process')
+        csv_file = window_csv_file()
+        if not csv_file:
+            return do_exit('Can not proceed without a student export file.', 0)
+    else:
+        try:
+            csv_file = Path(config['__cmd_line']['student_export'])
+        except TypeError:
+            return do_exit('No student export file specified on command line', 1)
         
-    # get csv_file and drive_path from the command line
-    try:
-        csv_file = Path(config['__cmd_line']['student_export'])
-    except TypeError:
-        logging.info('No student export file specified on command line')
-        csv_file = None
-        
-    # check drive path is a google drive path
-    drive_path = Path(config['main']['drive_path'])
-
-    drive_status = check_drive_path(drive_path)    
-    if not drive_status[0]:
-        do_exit(drive_status[1], 1)
-        # consider prompting user at this point to enter a valid drive
-    
-    if not csv_file and run_gui:
-        csv_file = Path(sg.popup_get_file('Select a Student Export File to Process'))
-    
-    # read CSV into a list
     if not csv_file:
-        do_exit('No student export CSV file specified. Exiting.', 1)
+        return do_exit('Student export file missing', 1)
+    
     try:
-        print(f'\nProcessing {csv_file} file...')
+        print(f'\nProcessing {csv_file}...')
         csv_list = csv_to_list(csv_file)
     except (FileNotFoundError, OSError, IOError, TypeError) as e:
-        logging.error(f'could not read csv file: {csv_file}')
-        logging.error(f'{e}')
-        do_exit(e, 1)
+        logging.error(f'could not read csv file: {csv_file.name}')
+        logging.error(e)
+        return do_exit(e, 1)
     except csv.Error as e:
-        logging.error(f'e')
-        do_exit(f'{e} of file "{csv_file}". Try using the field delimiter "Comma" when preparing the export', 1)
+        logging.error(f'could not process csv file: {csv_file.name}')
+        logging.error(e)
+        return do_exit(e, 1)
     finally:
-        print(f'file successfully read ')
+        print('done processing')
     
-    # map the expected headers to the appropriate columns
     print(f'checking for appropriate column headers')
     header_map, missing_headers = map_headers(csv_list, expected_headers.keys())
     
-    # error out if there are any missing headers in the export file
     if len(missing_headers) > 0:
-        do_exit(f'{csv_file.name} is missing one or more headers:\n\t{missing_headers}\nprogram cannot continue', 1)
+        return do_exit(f'{csv_file.name} is missing one or more column headers:\n{missing_headers}', 1)
     
-    # validate the csv list
-    print(f'checking rows for invalid data')
-    valid_rows, invalid_rows = validate_data(csv_list, expected_headers, header_map)
-    print(f'{len(valid_rows)} student rows were found')
-    print(f'{len(invalid_rows)} improperly formated student rows were found')
     
-    # FIX ME add checks here for bad valid_rows, invalid rows
     
-    # insert the headers to the invalid rows list for output later
-    invalid_rows.insert(0, csv_list[0])
-    
-#     return valid_rows, invalid_rows, header_map
-    
-    print(f'\nPreparing to create student folders for {len(valid_rows)} students')
-    print(f'using Google Shared Drive: {drive_path}')
-    print(f'this could take a while...')
-    directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map)
-    
-    print(f'checking that {len(directories)} student folders were properly created in the cloud')
-    confirmed_dirs, unconfirmed_dirs = check_folders(directories)
-    print(f'{len(confirmed_dirs)} were confirmed; {len(unconfirmed_dirs)} could not be confirmed')
-#     return confirmed_dirs, unconfirmed_dirs
-
-    csv_files = write_csv(confirmed_dirs, unconfirmed_dirs, invalid_rows)
         
-    if update_user_config:
-        try:
-            logging.info(f'updating user configuration file: {user_config_path}')
-            ArgConfigParse.write(config, user_config_path, create=True)
-        except Exception as e:
-            m = f'Error updating user configuration file: {e}'
-            do_exit(m, 1)
-    
-    
-    len_confirmed = len_of_dict(confirmed_dirs)
-    len_unconfirmed = len_of_dict(unconfirmed_dirs)
-            
-    # Add a summary output:
-    s = multi_line_string()
-#     print('********* Summary **********')
-    s.string = '********* Summary **********'
-#     print(f'Processed {len(csv_list)-1} student records from "{csv_file}"')
-    s.string = f'Processed {len(csv_list)-1} student records from "{csv_file}"'
-#     print(f'{len(valid_rows)} records contained valid data and were processed.')
-    s.string = f'{len(valid_rows)} records contained valid data and were processed.'
-    if len(invalid_rows) > 1:
-#         print(f'{len(invalid_rows)-1} records contained invalid data and could not be used')
-        s.string = f'{len(invalid_rows)-1} records contained invalid data and could not be used\n'
-#     print(f'\n')
-
-    if len_confirmed > 0:
-#         print(f'Succesfully created or validated folders are stored in: \n{csv_files["confirmed"]}\n\tShare this file with the PowerSchool Administrator\n')
-        s.string = f'Succesfully created or validated folders are stored in: \n{csv_files["confirmed"]}\n\tShare this file with the PowerSchool Administrator\n'
-    if len_unconfirmed > 0:
-#         print(f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again')
-        s.string = f'Records that could not be confirmed are stored in: \n{csv_files["unconfirmed"]}\n\tPlease run the tool again'
-    if len(invalid_rows) > 1:
-        s.string = f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.'
-#         print(f'Rows that contained invalid data that were NOT processed are stored in: \n{csv_files["invalid"]}\n\tReview this file to learn more.')  
-    sg.popup(s)
-    logging.debug('done')
-    # final print
-    print('.')
-
-#     if run_gui:
-#         sg.easy_print_close()
-
-    return valid_rows, invalid_rows
-
-
-
-
-# In[31]:
-
-
-def print_help():
-    print('help here')
-    pass
-
-
-
-
-# In[32]:
-
-
-if __name__ == '__main__':
-    run_gui = False
-    if len(sys.argv) <= 1:
-#         print = sg.Print
-        run_gui = True
-
-    if '-f' in sys.argv:
-#         print = sg.Print
-        run_gui = True
         
-
+        
     
-#     f = main()
-    if run_gui:
-        def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
-        layout =[ [text_fmt('Cumulative Portfolio Creator')],
-          [sg.Text('Create Cumulative Folders on Google Shared Drive', font='Courier 11')],
-          [sg.Output(size=(80, 50), font='Courier 12')],
-          [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
-                ]
-                 
-        window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
-                 
-        while True:
-            window.finalize()
-            window.BringToFront()
-            (event, value) = window.read()
-
-
-
-            if event == 'EXIT' or event == sg.WIN_CLOSED:
-                break
-            if event == 'GO':
-                main()
-        #         window.Refresh()
-            if event == 'Help':
-        #         sg.popup_scrolled('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla faucibus bibendum pharetra. Sed ut sapien orci. Nulla tempor elementum ullamcorper. Ut turpis tellus, tempor nec placerat tristique, maximus ut magna. Morbi urna lorem, eleifend vitae risus eu, aliquet scelerisque diam. Vivamus dignissim, mauris nec rhoncus sollicitudin, neque urna molestie sapien, a pulvinar ipsum justo id lacus. Fusce neque eros, viverra eu porta non, eleifend eget massa.')
-                print_help()
-        window.close()
-        sg.easy_print_close()
-
-    else:
-        main()
+    return do_exit('Done', 0)
 
 
 
 
 # In[ ]:
 
-
-# adjust_handler('*', 'DEBUG')
-# adjust_handler('*', 'INFO')
-
-
-
-
-# In[ ]:
-
-
-# # sys.argv.append('-g')
-# # sys.argv.append('/Volumes/GoogleDrive/Shared drives/IT Blabla I/Student Cumulative Folders (AKA Student Portfolios)')
-
-# # # sys.argv.append('-g')
-# # # sys.argv.append('/xVolumes/GoogleDrive/Shared drives/IT Blabla I/Student Cumulative Folders (AKA Student Portfolios)')
-
-# sys.argv.append('-s')
-# # sys.argv.append('./data/student.export.text')
-# sys.argv.append('./data/invalid.student.export.text')
-# # sys.argv.append('./bad.student.export.text')
 
 # sys.argv.append('-v')
-
-# # sys.argv.append('-l')
-# # sys.argv.append('INFO')
 
 
 
@@ -795,7 +598,61 @@ if __name__ == '__main__':
 
 # sys.argv.pop()
 
-# # sys.argv
+
+
+
+# In[ ]:
+
+
+f = main_program()
+f()
+
+
+
+
+# In[30]:
+
+
+run_gui = False
+if len(sys.argv) <= 1:
+    run_gui = True
+    
+if '-f' in sys.argv:
+    logging.debug('likely running in a jupyter environ')
+    run_gui = True
+
+if run_gui:
+#     print = sg.Print
+    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
+    layout =[ [text_fmt('Cumulative Portfolio Creator')],
+      [sg.Text('Create Cumulative Folders on Google Shared Drive', font='Courier 11')],
+      [sg.Output(size=(80, 50), font='Courier 12')],
+      [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
+            ]
+
+    window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
+
+    while True:
+        window.finalize()
+        window.BringToFront()
+        (event, value) = window.read()
+
+
+
+        if event == 'EXIT' or event == sg.WIN_CLOSED:
+            break
+        if event == 'GO':
+            ret_val = main_program(run_gui)
+            ret_val()
+        if event == 'Help':
+            print_help()
+    window.close()
+    sg.easy_print_close()
+
+# run in non-interactive command line mode
+else:
+    ret_val = main_program()
+    ret_val()
 
 
 
@@ -803,6 +660,14 @@ if __name__ == '__main__':
 # In[ ]:
 
 
-# sys.argv
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
