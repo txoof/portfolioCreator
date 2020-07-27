@@ -93,3 +93,12 @@ csv_error_strings = {'duplicate':
                      'subdirs': '',
                      'exist': ''
                       }
+
+# GUI Settings #
+################
+
+FONT_FACE = 'Courier'
+FONT_SIZE = 14
+FONT = f'{FONT_FACE} {FONT_SIZE}'
+TEXT_WIDTH = 65
+

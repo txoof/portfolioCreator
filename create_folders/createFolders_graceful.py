@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[13]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[ ]:
+# In[14]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[ ]:
+# In[15]:
 
 
 import constants
@@ -36,7 +36,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[ ]:
+# In[16]:
 
 
 from helpers import *
@@ -46,7 +46,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[ ]:
+# In[17]:
 
 
 import sys
@@ -63,7 +63,7 @@ import PySimpleGUI as sg
 
 
 
-# In[ ]:
+# In[18]:
 
 
 class multi_line_string():
@@ -101,7 +101,7 @@ class multi_line_string():
 
 
 
-# In[ ]:
+# In[19]:
 
 
 def wrap_print(t='', width=None):
@@ -125,7 +125,7 @@ def wrap_print(t='', width=None):
 
 
 
-# In[ ]:
+# In[20]:
 
 
 def parse_cmdargs():
@@ -151,7 +151,7 @@ def parse_cmdargs():
 
 
 
-# In[ ]:
+# In[21]:
 
 
 def read_config(files):
@@ -170,7 +170,7 @@ def read_config(files):
 
 
 
-# In[ ]:
+# In[22]:
 
 
 def check_drive_path(drive_path=None):
@@ -260,7 +260,7 @@ The following steps should be run on the user's computer, signed in as the user
 
 
 
-# In[ ]:
+# In[23]:
 
 
 l = [1, 2, 4]
@@ -270,7 +270,7 @@ for i, j in enumerate(l):
 
 
 
-# In[ ]:
+# In[42]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -362,7 +362,13 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
             logging.info('this directory will not be created')            
             directories['multiple'].append(directory) 
         print(f'{(index+1)/total*100:.0f}% completed')
+
         if window:
+            sg.one_line_progress_meter('Records Processed:', title='Cumulative Folder Creation', 
+                                       current_value=index+1, 
+                                       max_value=len(directories_to_check), 
+                                       key='key',
+                                       orientation='h')
             window.Refresh()
 
                 
@@ -371,7 +377,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[ ]:
+# In[30]:
 
 
 def check_folders(directories, window=None):
@@ -409,6 +415,7 @@ def check_folders(directories, window=None):
         logging.info(f'checking student directories: attempt {i+1} of {confirm_retry}')
         unconfirmed_dir_total = 0
         print(f'attempt {i+1} of {confirm_retry}')
+        
         delay = base_wait * i
         if i > 0:
             logging.info(f'pausing {delay} seconds before checking again ')
@@ -445,7 +452,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[ ]:
+# In[31]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -560,38 +567,57 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
+# In[32]:
+
+
+# def window_drive_path():
+#     '''launch an interactive window to ask user to specify a google drive shared folder'''
+#     drive_path = sg.Window(constants.app_name,
+#                           [[sg.Text ('Choose the Google Shared Drive and folder that contains student cummulative folders.')],
+#                                      [sg.In(), sg.FolderBrowse()],
+#                                      [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
+    
+#     if drive_path:
+#         drive_path = Path(drive_path)
+#         logging.debug(f'user selected: {drive_path}')
+#     else: 
+#         drive_path = None
+#         logging.info('no drive path selected')
+        
+#     return drive_path
+
+
+
+
+# In[33]:
 
 
 def window_drive_path():
-    '''launch an interactive window to ask user to specify a google drive shared folder'''
-    drive_path = sg.Window(constants.app_name,
-                          [[sg.Text ('Choose the Google Shared Drive and folder that contains student cummulative folders.')],
-                                     [sg.In(), sg.FolderBrowse()],
-                                     [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
+    drive_path = sg.popup_get_folder('Choose the Google Shared Drive **AND** folder that contains student cumulative folders.', 
+                                     title='Select A Shared Drive', 
+                                     initial_folder='/Volumes/GoogleDrive/',
+                                     keep_on_top=True, font=constants.FONT)
     
     if drive_path:
-        drive_path = Path(drive_path)
+        drive_path=Path(drive_path)
         logging.debug(f'user selected: {drive_path}')
-    else: 
+    else:
         drive_path = None
-        logging.info('no drive path selected')
-        
+        logging.info('no drive path selected by user')
     return drive_path
 
 
 
 
-# In[ ]:
+# In[34]:
 
 
 def window_csv_file():
     '''launch an interactive window to ask user to specify a student export file'''
-#     student_export = sg.Window(constants.app_name,
-#                           [[sg.Text ('Choose a student.export.text file to process')],
-#                                      [sg.In(), sg.FolderBrowse()],
-#                                      [sg.Ok(), sg.Cancel()]]).read(close=True)[1][0]
-    csv_file = sg.popup_get_file('Select a Student Export File to Process')
+    csv_file = sg.popup_get_file('Select a Student Export File to Process', 
+                                 title='Select A Student Export',
+                                 initial_folder=Path('~/Downloads').expanduser(),
+                                 keep_on_top=True, font=constants.FONT)
     
     if csv_file:
         csv_file = Path(csv_file)
@@ -604,7 +630,7 @@ def window_csv_file():
 
 
 
-# In[ ]:
+# In[35]:
 
 
 def print_help():
@@ -613,7 +639,7 @@ def print_help():
 
 
 
-# In[ ]:
+# In[36]:
 
 
 def main_program(interactive=False, window=None):
@@ -792,7 +818,7 @@ def main_program(interactive=False, window=None):
         window.Refresh()
     
     if interactive:
-        sg.popup(s)
+        sg.popup(s, title='Summary', font=constants.FONT, keep_on_top=True)
     
 
     logging.debug('done')
@@ -802,7 +828,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[37]:
 
 
 # # sys.argv.append('-v')
@@ -814,7 +840,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[38]:
 
 
 # sys.argv.pop()
@@ -822,7 +848,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[39]:
 
 
 # f = main_program()
@@ -831,7 +857,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[40]:
 
 
 run_gui = False
@@ -843,19 +869,19 @@ if '-f' in sys.argv:
     run_gui = True
 
 if run_gui:
-#     print = sg.Print
     # set the global constant for text width
-    TEXT_WIDTH = 65
+    TEXT_WIDTH = constants.TEXT_WIDTH
+    FONT = constants.FONT
 
     # create a wrapper that matches the text output size
     logging.debug('redefining `print` to use `wrap_print`')
     print = wrap_print
     
-    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
+    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font=FONT)
     layout =[ [text_fmt('Cumulative Portfolio Creator')],
-      [sg.Text('Create Cumulative Folders on Google Shared Drive', font='Courier 11')],
-      [sg.Output(size=(TEXT_WIDTH+10, 35), font='Courier 12')],
-      [sg.Button('GO'), sg.Button('Change Shared Drive'), sg.Button('Help'), sg.Button('EXIT')],
+      [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE-2}')],
+      [sg.Output(size=(TEXT_WIDTH+10, 35), font=FONT)],
+      [sg.Button('Process File'), sg.Button('Change Shared Drive'), sg.Button('Help'), sg.Button('EXIT')],
             ]
 
     window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
@@ -866,11 +892,9 @@ if run_gui:
         window.BringToFront()
         (event, value) = window.read()
 
-
-
         if event == 'EXIT' or event == sg.WIN_CLOSED:
             break
-        if event == 'GO':
+        if event == 'Process File':
             ret_val = main_program(run_gui, window)
             ret_val()
 #             print(p)

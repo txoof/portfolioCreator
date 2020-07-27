@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-#!/usr/bin/env python
 # coding: utf-8
 
 
-# In[1]:
+# In[16]:
 
 
 import logging
@@ -13,7 +12,7 @@ import sys
 
 
 
-# In[2]:
+# In[17]:
 
 
 from rich.console import Console
@@ -22,7 +21,7 @@ from rich.markdown import Markdown
 
 
 
-# In[3]:
+# In[18]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert cf_gui.ipynb')
@@ -30,7 +29,7 @@ from rich.markdown import Markdown
 
 
 
-# In[7]:
+# In[26]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -38,7 +37,7 @@ from rich.markdown import Markdown
 
 
 
-# In[4]:
+# In[20]:
 
 
 def main(r=10):
@@ -50,7 +49,7 @@ def main(r=10):
 
 
 
-# In[5]:
+# In[21]:
 
 
 def hep():
@@ -63,7 +62,7 @@ def hep():
 
 
 
-# In[6]:
+# In[25]:
 
 
 def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
@@ -73,7 +72,7 @@ def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font=
 
 layout =[ [text_fmt('Portfolio Creator')],
           [sg.Text('description\nfoo\nbar', font='Courier 11')],
-          [sg.Output(size=(80, 50), font='Courier 12')],
+          [sg.Output(size=(100, 40), font='Courier 12')],
           [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
 ]
 
@@ -111,13 +110,5 @@ sg.easy_print_close()
 # with open("README.md") as readme:
 #     markdown = Markdown(readme.read())
 # console.print(markdown)
-
-
-
-
-# In[ ]:
-
-
-
 
 
