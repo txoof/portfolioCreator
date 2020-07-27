@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[9]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -22,7 +22,7 @@
 
 
 
-# In[10]:
+# In[3]:
 
 
 import constants
@@ -36,7 +36,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[11]:
+# In[4]:
 
 
 from helpers import *
@@ -46,7 +46,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[16]:
+# In[5]:
 
 
 import sys
@@ -56,12 +56,14 @@ import ArgConfigParse
 import os
 import glob
 from datetime import datetime
+import textwrap
+
 import PySimpleGUI as sg
 
 
 
 
-# In[17]:
+# In[6]:
 
 
 def parse_cmdargs():
@@ -87,7 +89,7 @@ def parse_cmdargs():
 
 
 
-# In[18]:
+# In[7]:
 
 
 def read_config(files):
@@ -106,7 +108,7 @@ def read_config(files):
 
 
 
-# In[19]:
+# In[8]:
 
 
 def check_drive_path(drive_path=None):
@@ -154,23 +156,40 @@ def check_drive_path(drive_path=None):
     
     if not sentry_file_path.is_file():
         logging.warning(f'sentry file is missing in specified path "{drive_path}"')
-        msg = f'''The chosen google shared drive "{drive_path}"
-does not appear to be a Cumulative Student Folder. 
+        msg = f'''The file: "{sentry_file}" is missing from the chosen shared drive:
+`{drive_path}`
 
-The file: "{sentry_file}" is missing. 
-If you are sure {drive_path} is correct, 
-please contact IT Support and askfor help. 
+This does not appear to be the correct folder for `Cumulative Student Folders.` 
 
-Please screenshot or copy this entire text below and provide it to IT Support.
+Please try again.
 
-###############################################################################
-Run the command below from the terminal of the user that submitted this ticket.
-This command will create the necessary files for this script. 
+If you are sure 
+`{drive_path}` 
+is correct, please contact IT Support and askfor help. 
 
-Confirm that {drive_path} is the correct
-Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
-     $ touch {drive_path}/{sentry_file}'''
+Screenshot or copy this entire text below and provide it to IT Support.
+
+###########################################################
+IT Support:
+{sys.argv[0]}
+The program above uses Google File Stream to create student folders on a Google Shared Drive. The Shared Drive should contain a folder called `Student Cumulative Folders (AKA Student Portfolios)` or something similar. 
+
+The program checks for `{sentry_file}` to ensure that the user has selected the appropriate Google Shared Drive **AND** the appropriate folder.
+
+BEFORE PROCEEDING: Confirm that {drive_path} is correct and contains the `Student Cumulative Folders (AKA Student Portfolios)` folder.
+
+The following steps should be run on the user's computer, signed in as the user
+
+1) Check Google File Stream is running on the user's computer and the use is signed in
+2) Use Finder to verify the user has access to {drive_path}
+3) Check that `Student Cumulative Folders (AKA Student Portfolios)` exists on the Shared Drive above
+4) Open `terminal.app` and run the command below
+
+     $ touch {drive_path}/{sentry_file}
+     
+5) Try running the program again'''
         drive_ok = False
+        
     
     
     
@@ -179,80 +198,32 @@ Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
 
 
 
-# In[20]:
+# In[9]:
 
 
-def check_drive_path(drive_path=None):
-    '''check that path is a valid google drive path and contains the appropriate sentry file
+def wrap_print(t='', width=None):
+
+    if not width:
+        width = TEXT_WIDTH
+#     logging.debug(f'wrapping text with width: {width}')
     
-    Args:
-        drive_path(`str`): path to google drive containg cummulative folders and sentry file
+#     t = t.splitlines()
     
-    Retruns:
-        `tuple` of `bool`, `str`: When true, drive is OK; when false, drive is not valid; str contains errors'''
-    # this is super redundant -- checks the following:
-    # * is a path
-    # * is a google drive path
-    # * if sentry file exists
-    # this may be a good idea considering how some users have run into many problems with this
-
-    drive_ok = True
-    msg = None
-    if not drive_path:
-        logging.info('no google drive specified')
-        drive_ok = False
-        msg = 'No Google Drive specified'
-        return drive_ok, msg
-    else:
-        drive_path = Path(drive_path)
+    wrapper = textwrap.TextWrapper(width=width, break_long_words=False, replace_whitespace=False)
+#     w_list = wrapper.wrap(text=t)
     
-    if not drive_path.exists():
-        logging.warning(f'specified path "{drive_path}" does not exist')
-        drive_ok = False
-        msg = f'The Google Drive "{drive_path}" does not appear to exist on Google Drive'
-        return drive_ok, msg
-    else:
-        google_drive = GoogleDrivePath(drive_path)
+    result = '\n'.join([wrapper.fill(line) for line in t.splitlines()])
+
+#     for line in w_list:
+#         __builtin__.print(line)
+    __builtin__.print(result)
+    __builtin__.print('\n')
     
-    try:
-        google_drive.get_xattr('user.drive.id')
-    except ChildProcessError as e:
-        logging.warning(f'specified path "{drive_path}" is not a Google Drive path')
-        msg = f'The Google Drive "{drive_path}" does not appear to be a valid google Shared Drive'
-        drive_ok = False
-        return drive_ok, msg
-
-    sentry_file = constants.sentry_file    
-    sentry_file_path = drive_path/Path(sentry_file)
-    
-    if not sentry_file_path.is_file():
-        logging.warning(f'sentry file is missing in specified path "{drive_path}"')
-        msg = f'''The chosen google shared drive "{drive_path}"
-does not appear to be a Cumulative Student Folder. 
-
-The file: "{sentry_file}" is missing. 
-If you are sure {drive_path} is correct, 
-please contact IT Support and askfor help. 
-
-Please screenshot or copy this entire text below and provide it to IT Support.
-
-###############################################################################
-Run the command below from the terminal of the user that submitted this ticket.
-This command will create the necessary files for this script. 
-
-Confirm that {drive_path} is the correct
-Google Shared Drive for Cumulative Student Folders BEFORE proceeding.
-     $ touch {drive_path}/{sentry_file}'''
-        drive_ok = False
-    
-    
-    
-    return drive_ok, msg
 
 
 
 
-# In[21]:
+# In[10]:
 
 
 def check_folders(directories):
@@ -316,7 +287,7 @@ def check_folders(directories):
 
 
 
-# In[22]:
+# In[11]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -431,7 +402,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[23]:
+# In[12]:
 
 
 def window_drive_path():
@@ -443,6 +414,7 @@ def window_drive_path():
     
     if drive_path:
         drive_path = Path(drive_path)
+        logging.debug(f'user selected: {drive_path}')
     else: 
         drive_path = None
         logging.info('no drive path selected')
@@ -452,7 +424,7 @@ def window_drive_path():
 
 
 
-# In[24]:
+# In[13]:
 
 
 def window_csv_file():
@@ -474,7 +446,7 @@ def window_csv_file():
 
 
 
-# In[25]:
+# In[14]:
 
 
 def print_help():
@@ -483,7 +455,7 @@ def print_help():
 
 
 
-# In[29]:
+# In[15]:
 
 
 def main_program(interactive=False):
@@ -514,13 +486,14 @@ def main_program(interactive=False):
     # handle missing google shared drive paths
     if not config['main']['drive_path']:
         if interactive:
-            print('No Google Shared Drive has been set.')
-            print('Choose a Google Shared Drive that Contains Student Cumulative (portfolio) folders')
+            print('No Google Shared Drive has been set yet.')
+            print('Locate the proper Google Shared Drive **and** then locate the `Student Cumulative Folders (AKA Student Portfolios)` folder')
             drive_path_interactive = window_drive_path()
             if not drive_path_interactive: 
                 return do_exit('Please choose a Google Shared Drive to proceed', 0)
             else:
                 config['main']['drive_path'] = drive_path_interactive
+                update_user_config = True
                 
         if not interactive:
             return (do_exit(f'Can not run without a Google Shared Drive Configured.\ntry:\n{sys.argv[0]} -h for help', 1))
@@ -538,6 +511,14 @@ def main_program(interactive=False):
     # load file constants
     expected_headers = constants.expected_headers    
     student_dirs = constants.student_dirs
+    
+    # set local vars
+    drive_path = Path(config['main']['drive_path'])
+    
+    # check that supplied path is a valid cummulative folder path
+    drive_status = check_drive_path(drive_path)
+    if not drive_status[0]:
+        return do_exit(drive_status[1], 0)
           
     # get csv_file and drive path
     if interactive:
@@ -554,6 +535,7 @@ def main_program(interactive=False):
     if not csv_file:
         return do_exit('Student export file missing', 1)
     
+    # read the CSV file
     try:
         print(f'\nProcessing {csv_file}...')
         csv_list = csv_to_list(csv_file)
@@ -567,13 +549,28 @@ def main_program(interactive=False):
         return do_exit(e, 1)
     finally:
         print('done processing')
-    
+   
+    # map the headers 
     print(f'checking for appropriate column headers')
     header_map, missing_headers = map_headers(csv_list, expected_headers.keys())
     
     if len(missing_headers) > 0:
-        return do_exit(f'{csv_file.name} is missing one or more column headers:\n{missing_headers}', 1)
+        return do_exit(f'{csv_file.name} is missing one or more column headers:\n{missing_headers}\n\ncan not proceed with this file', 0)
     
+    # validate rows in the CSV file
+    print(f'\nchecking each row for valid data')
+    valid_rows, invalid_rows = validate_data(csv_list, expected_headers, header_map)
+    print(f'{len(valid_rows)} student rows were found and will be processed')
+    print(f'{len(invalid_rows)} improperly formatted student rows were found and will be skipped')
+    
+    # insert the header into the invalid_rows for later output
+    invalid_rows.insert(0, csv_list[0])
+    
+    print(f'\nPreparing to process and create student folders for{len(valid_rows)} students')
+    print(f'using Google Shared Drive: {drive_path}')
+    print(f'this could take some time...')
+    
+    directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map)
     
     
         
@@ -585,15 +582,19 @@ def main_program(interactive=False):
 
 
 
-# In[ ]:
+# In[16]:
 
 
-# sys.argv.append('-v')
+# # sys.argv.append('-v')
+
+# sys.argv.append('-s')
+
+# sys.argv.append('./data/invalid.student.export.text')
 
 
 
 
-# In[ ]:
+# In[17]:
 
 
 # sys.argv.pop()
@@ -601,16 +602,16 @@ def main_program(interactive=False):
 
 
 
-# In[ ]:
+# In[18]:
 
 
-f = main_program()
-f()
+# f = main_program()
+# f()
 
 
 
 
-# In[30]:
+# In[19]:
 
 
 run_gui = False
@@ -623,16 +624,24 @@ if '-f' in sys.argv:
 
 if run_gui:
 #     print = sg.Print
+    # set the global constant for text width
+    TEXT_WIDTH = 65
+
+    # create a wrapper that matches the text output size
+    logging.debug('redefining `print` to use `wrap_print`')
+    print = wrap_print
+    
     def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
     layout =[ [text_fmt('Cumulative Portfolio Creator')],
       [sg.Text('Create Cumulative Folders on Google Shared Drive', font='Courier 11')],
-      [sg.Output(size=(80, 50), font='Courier 12')],
-      [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
+      [sg.Output(size=(TEXT_WIDTH+10, 35), font='Courier 12')],
+      [sg.Button('GO'), sg.Button('Change Shared Drive'), sg.Button('Help'), sg.Button('EXIT')],
             ]
 
     window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
 
     while True:
+        
         window.finalize()
         window.BringToFront()
         (event, value) = window.read()
@@ -644,6 +653,14 @@ if run_gui:
         if event == 'GO':
             ret_val = main_program(run_gui)
             ret_val()
+#             print(p)
+        if event == 'Change Shared Drive':
+            drive = window_drive_path()
+            sys.argv.append('-d')
+            sys.argv.append(drive)
+            print(f'Shared drive will be updated to {drive} on next execution.')
+#             ret_val = main_program(run_gui)
+#             ret_val()
         if event == 'Help':
             print_help()
     window.close()
@@ -653,14 +670,6 @@ if run_gui:
 else:
     ret_val = main_program()
     ret_val()
-
-
-
-
-# In[ ]:
-
-
-
 
 
 
