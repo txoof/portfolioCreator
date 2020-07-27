@@ -13,7 +13,7 @@
 
 
 
-# In[2]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 import constants
@@ -36,7 +36,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[4]:
+# In[ ]:
 
 
 from helpers import *
@@ -46,7 +46,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[5]:
+# In[ ]:
 
 
 import sys
@@ -63,7 +63,69 @@ import PySimpleGUI as sg
 
 
 
-# In[6]:
+# In[ ]:
+
+
+class multi_line_string():
+    '''multi-line string object 
+    
+    each time  multi_line_string.string is set equal to a string, it is added to 
+    the existing string with a new line character
+    
+    Properties:
+        string(`str`): string'''
+
+    def __init__(self, s=''):
+        self._string = ''
+        self.append(s)
+    
+    def __str__(self):
+        return str(self.string)
+    
+    def __repr__(self):
+        return(str(self.string))
+    
+    @property
+    def string(self):
+        return self._string
+    
+    @string.setter
+    def string(self, s):
+        self._string = s
+    
+    def append (self, s):
+        self._string = self._string + s + '\n'
+        
+    
+
+
+
+
+# In[ ]:
+
+
+def wrap_print(t='', width=None):
+
+    if not width:
+        width = TEXT_WIDTH
+#     logging.debug(f'wrapping text with width: {width}')
+    
+#     t = t.splitlines()
+    
+    wrapper = textwrap.TextWrapper(width=width, break_long_words=False, replace_whitespace=False)
+#     w_list = wrapper.wrap(text=t)
+    
+    result = '\n'.join([wrapper.fill(line) for line in t.splitlines()])
+
+#     for line in w_list:
+#         __builtin__.print(line)
+    __builtin__.print(result)
+    
+
+
+
+
+# In[ ]:
 
 
 def parse_cmdargs():
@@ -89,7 +151,7 @@ def parse_cmdargs():
 
 
 
-# In[7]:
+# In[ ]:
 
 
 def read_config(files):
@@ -108,7 +170,7 @@ def read_config(files):
 
 
 
-# In[8]:
+# In[ ]:
 
 
 def check_drive_path(drive_path=None):
@@ -198,41 +260,128 @@ The following steps should be run on the user's computer, signed in as the user
 
 
 
-# In[9]:
+# In[ ]:
 
 
-def wrap_print(t='', width=None):
+l = [1, 2, 4]
+for i, j in enumerate(l):
+    __builtin__.print(f'i: {i}; j: {j}')
 
-    if not width:
-        width = TEXT_WIDTH
-#     logging.debug(f'wrapping text with width: {width}')
+
+
+
+# In[ ]:
+
+
+def create_folders(drive_path, valid_rows, header_map, window=None):
+    logging.info(f'creating folders as needed in {drive_path}')
+    grade_level_dirs = constants.student_dirs
     
-#     t = t.splitlines()
+    directories = {'created': [], 'exist': [], 'duplicate': [], 'failed': [], 'multiple': [], 'subdirs': []}
+    directories_to_check = []
+
+    total = len(valid_rows)
+    print(f'{total} student directories will be checked and created if needed')
     
-    wrapper = textwrap.TextWrapper(width=width, break_long_words=False, replace_whitespace=False)
-#     w_list = wrapper.wrap(text=t)
+    def make_subdirs(student_dir):
+        '''helper function to create multiple child directories in `student_dir`
+        
+        Args:
+            student_dir(`GDStudent`): parent for child directories
+        
+        Returns:
+            None'''
+        logging.debug(f'checking grade level dirs for {student_dir}')
+        for gld in grade_level_dirs:
+            subdir = student_dir.mkchild(gld, exist_ok=True)
+            if not subdir.exists():
+                try:
+                    subdir.mkdir()
+                except (OSError, FileNotFoundError) as e:
+                    logging.warning(f'error creating grade level directory: {gld}: {e}')
+                    directories['failed'].append(subdir)
+                else:
+                    directories['subdirs'].append(subdir)
+            else:
+                if not subdir.confirm():
+                    logging.debug(f'exists, but is not confirmed: {subdir}')
+                    directories['subdirs'].append(subdir)
+#         return ok, failed
+                
     
-    result = '\n'.join([wrapper.fill(line) for line in t.splitlines()])
 
-#     for line in w_list:
-#         __builtin__.print(line)
-    __builtin__.print(result)
-    __builtin__.print('\n')
+    if window:
+        window.Refresh()
     
+    # build a list of GDStudentPath objects to check for existence/creation
+    
+    logging.info(f'processing {total} rows')
+    
+    for student in valid_rows:
+        class_of = student[header_map['ClassOf']]
+        last_first = student[header_map['LastFirst']]
+        student_number = student[header_map['Student_Number']]
+        logging.debug(f'class: {class_of}, lastfirst: {last_first}, student number: {student_number}')
+        directories_to_check.append(GDStudentPath(drive_path, ClassOf=class_of, Student_Number=student_number, LastFirst=last_first))
+    
+    
+    # check for similar directories
+    for index, directory in enumerate(directories_to_check):
+        logging.debug(f'checking for existing dirs with student number: {directory.Student_Number}')
+        directory.check_similar()
+        # new directories
+        if len(directory.matches) == 0:
+            logging.debug(f'creating new directory for {directory.LastFirst}')
+            try:
+                directory.mkdir()
+            except (OSError, FileNotFoundError) as e:
+                logging.warning(f'error creating directory: {directory.path}: {e}')
+                directories['failed'].append(directory)
+            else:
+                directories['created'].append(directory)
+            
+            # queue subdirs for creation
+            make_subdirs(directory)
+                    
+        # existing directories           
+        if len(directory.matches) == 1 and not directory.duplicate:
+            logging.debug(f'existing directory for {directory.LastFirst}, this is OK')
+            directories['exist'].append(directory)
+            # queue subdirs for creation
+            make_subdirs(directory)
+        
+        if len(directory.matches) == 1 and directory.duplicate:
+            logging.warning(f'a directory already exists with a different LastFirst, but the same Student_Number; this is NOT OK')
+            logging.info('this directory will not be created')
+            directories['duplicate'].append(directory)
+            
+    
+        # directories that have multiple matches
+        if len(directory.matches) > 1:
+            logging.warning(f'{len(directory.matches)} existing directories found for {directory.LastFirst}; this is NOT OK')            
+            logging.info('this directory will not be created')            
+            directories['multiple'].append(directory) 
+        print(f'{(index+1)/total*100:.0f}% completed')
+        if window:
+            window.Refresh()
+
+                
+    return directories
 
 
 
 
-# In[10]:
+# In[ ]:
 
 
-def check_folders(directories):
+def check_folders(directories, window=None):
     '''Verify that processed rows have synchronized over filestream
     report on those that have failed to sync
     
     Args:
         directories(`dict`): {'created': [], 'subdirs': [], 'exist': []}
             all other keys will be returned in the unconfirmed_sets of the tuple
+        window(`PySimpleGUI window): window object; refresh after each print statement
         
     Returns:
         tuple(confirmed_sets, unconfirmed_sets)'''
@@ -255,15 +404,20 @@ def check_folders(directories):
         unconfirmed_sets[each_set] = set(directories[each_set])
         confirmed_sets[each_set] = set()
 
-
-    for i in range(0, confirm_retry):        
+    
+    for i in range(0, confirm_retry):
         logging.info(f'checking student directories: attempt {i+1} of {confirm_retry}')
         unconfirmed_dir_total = 0
+        print(f'attempt {i+1} of {confirm_retry}')
         delay = base_wait * i
         if i > 0:
             logging.info(f'pausing {delay} seconds before checking again ')
+            print(f'pausing for {delay} seconds')
             time.sleep(delay)
-        
+            
+        if window:
+            window.Refresh()
+            
         for each_set in sets_to_check:
             logging.debug(f'verifying set: {each_set}')
             confirmed_dirs = set()
@@ -280,14 +434,18 @@ def check_folders(directories):
         logging.debug(f'{unconfirmed_dir_total} directories remain unconfirmed')
         
         if unconfirmed_dir_total <= 0:
+            print(f'all folders confirmed')
             break
-            
+        print(f'{unconfirmed_dir_total} remain to be checked')
+        if window:
+            window.Refresh()
+    
     return confirmed_sets, unconfirmed_sets
 
 
 
 
-# In[11]:
+# In[ ]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -402,7 +560,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[12]:
+# In[ ]:
 
 
 def window_drive_path():
@@ -424,7 +582,7 @@ def window_drive_path():
 
 
 
-# In[13]:
+# In[ ]:
 
 
 def window_csv_file():
@@ -446,7 +604,7 @@ def window_csv_file():
 
 
 
-# In[14]:
+# In[ ]:
 
 
 def print_help():
@@ -455,10 +613,10 @@ def print_help():
 
 
 
-# In[15]:
+# In[ ]:
 
 
-def main_program(interactive=False):
+def main_program(interactive=False, window=None):
     # set the local logger
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
@@ -537,7 +695,7 @@ def main_program(interactive=False):
     
     # read the CSV file
     try:
-        print(f'\nProcessing {csv_file}...')
+        print(f'Processing {csv_file}...')
         csv_list = csv_to_list(csv_file)
     except (FileNotFoundError, OSError, IOError, TypeError) as e:
         logging.error(f'could not read csv file: {csv_file.name}')
@@ -549,6 +707,9 @@ def main_program(interactive=False):
         return do_exit(e, 1)
     finally:
         print('done processing')
+        
+    if interactive:
+        window.Refresh()
    
     # map the headers 
     print(f'checking for appropriate column headers')
@@ -558,31 +719,90 @@ def main_program(interactive=False):
         return do_exit(f'{csv_file.name} is missing one or more column headers:\n{missing_headers}\n\ncan not proceed with this file', 0)
     
     # validate rows in the CSV file
-    print(f'\nchecking each row for valid data')
+    print(f'checking each row for valid data')
     valid_rows, invalid_rows = validate_data(csv_list, expected_headers, header_map)
     print(f'{len(valid_rows)} student rows were found and will be processed')
     print(f'{len(invalid_rows)} improperly formatted student rows were found and will be skipped')
     
+    if interactive:
+        window.Refresh()
+    
     # insert the header into the invalid_rows for later output
     invalid_rows.insert(0, csv_list[0])
     
-    print(f'\nPreparing to process and create student folders for{len(valid_rows)} students')
+    print(f'\nPreparing to process and create student folders for {len(valid_rows)} students')
     print(f'using Google Shared Drive: {drive_path}')
     print(f'this could take some time...')
     
-    directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map)
+    if interactive:
+        window.Refresh()
+    
+    directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map, window=window)
     
     
-        
-        
-        
+    print(f'Confirming that student folders were properly created in the cloud')
+    confirmed_dirs, unconfirmed_dirs = check_folders(directories, window=window)
+    
+    
+    print('Preparing records...')
+    if interactive:
+        window.Refresh()
+    csv_files = write_csv(confirmed_dirs, unconfirmed_dirs, invalid_rows)
+    
+
+    
+    if update_user_config:
+        try:
+            logging.info(f'updating user configuration file: {user_config_path}')
+            ArgConfigParse.write(config, user_config_path, create=True)
+        except Exception as e:
+            m = f'Error updating user configuration file: {e}'
+            do_exit(m, 1)    
+    
+    
+    len_confirmed = len_of_dict(confirmed_dirs)
+    len_unconfirmed = len_of_dict(unconfirmed_dirs)
+    
+    s = multi_line_string()
+    
+    s.append('*****Summary*****')
+    s.append(f'Processed {len(csv_list)-1} student recods from "{csv_file}"')
+    s.append(f'{len(valid_rows)} rows contained valid data and were processed')
+    if len_confirmed > 0:
+        s.append('-'*10)
+        t_str = csv_files["confirmed"]
+        s.append(f'successfully created/validated folders are recorded in {t_str}')
+        s.append(f'share this file with the PowerSchool Administrator for import')
+    
+    if len_unconfirmed > 0:
+        t_str = csv_files["unconfirmed"]
+        s.append('-'*10)
+        s.append(f'{len_unconfirmed} rows could not be confirmed')
+        s.append(f'to try again, run this program again using the file: {t_str}')
+    
+    if len(invalid_rows) > 1:
+        s.append('-'*10)
+        s.append(f'{len(invalid_rows)-1} rows contained invalid data and were skipped')
+        s.append('please ONLY use student.export files produced by PowerSchool')
+        t_str = csv_files["invalid"]
+        s.append(f'rows that could not be processed are recorded in: {t_str}')
+    
+    print(s.string)
+    if interactive:
+        window.Refresh()
+    
+    if interactive:
+        sg.popup(s)
+    
+
+    logging.debug('done')
     
     return do_exit('Done', 0)
 
 
 
 
-# In[16]:
+# In[ ]:
 
 
 # # sys.argv.append('-v')
@@ -594,7 +814,7 @@ def main_program(interactive=False):
 
 
 
-# In[17]:
+# In[ ]:
 
 
 # sys.argv.pop()
@@ -602,7 +822,7 @@ def main_program(interactive=False):
 
 
 
-# In[18]:
+# In[ ]:
 
 
 # f = main_program()
@@ -611,7 +831,7 @@ def main_program(interactive=False):
 
 
 
-# In[19]:
+# In[ ]:
 
 
 run_gui = False
@@ -619,7 +839,7 @@ if len(sys.argv) <= 1:
     run_gui = True
     
 if '-f' in sys.argv:
-    logging.debug('likely running in a jupyter environ')
+    logging.debug('likely running in a jupyter environment')
     run_gui = True
 
 if run_gui:
@@ -651,14 +871,17 @@ if run_gui:
         if event == 'EXIT' or event == sg.WIN_CLOSED:
             break
         if event == 'GO':
-            ret_val = main_program(run_gui)
+            ret_val = main_program(run_gui, window)
             ret_val()
 #             print(p)
         if event == 'Change Shared Drive':
             drive = window_drive_path()
-            sys.argv.append('-d')
-            sys.argv.append(drive)
-            print(f'Shared drive will be updated to {drive} on next execution.')
+            if drive:
+                sys.argv.append('-g')
+                sys.argv.append(str(drive))
+                print(f'Shared drive will be updated to {drive} on next execution.')
+            else:
+                print('Shared drive will not be updated')
 #             ret_val = main_program(run_gui)
 #             ret_val()
         if event == 'Help':
