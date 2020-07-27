@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[13]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[14]:
+# In[36]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,8 +22,14 @@
 
 
 
-# In[15]:
+# In[33]:
 
+
+import builtins
+
+# I'm not sure why this is needed, but this resolves a runtime crash when run from the command line
+# reassign the builtins.print function to bprint
+bprint = builtins.print
 
 import constants
 # import class_constants
@@ -36,7 +42,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[16]:
+# In[4]:
 
 
 from helpers import *
@@ -46,7 +52,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[17]:
+# In[5]:
 
 
 import sys
@@ -58,12 +64,14 @@ import glob
 from datetime import datetime
 import textwrap
 
+from rich.console import Console
+from rich.markdown import Markdown
 import PySimpleGUI as sg
 
 
 
 
-# In[18]:
+# In[7]:
 
 
 class multi_line_string():
@@ -101,31 +109,25 @@ class multi_line_string():
 
 
 
-# In[19]:
+# In[49]:
 
 
 def wrap_print(t='', width=None):
-
     if not width:
-        width = TEXT_WIDTH
-#     logging.debug(f'wrapping text with width: {width}')
-    
-#     t = t.splitlines()
-    
+        width = constants.TEXT_WIDTH
+        
     wrapper = textwrap.TextWrapper(width=width, break_long_words=False, replace_whitespace=False)
-#     w_list = wrapper.wrap(text=t)
-    
+#     pdb.set_trace()
     result = '\n'.join([wrapper.fill(line) for line in t.splitlines()])
-
-#     for line in w_list:
-#         __builtin__.print(line)
-    __builtin__.print(result)
-    
-
+#     pdb.set_trace()
+# this causes a runtime crash; it's unclear why, but is resolved by reassigning bprint = builtins.print 
+#     builtins.print(result)
+    bprint(result)
 
 
 
-# In[20]:
+
+# In[9]:
 
 
 def parse_cmdargs():
@@ -144,6 +146,9 @@ def parse_cmdargs():
                       type=str, dest='main__log_level', help='Logging level -- Default: WARNING')
     args.add_argument('-v', '--version', dest='version', action='store_true',
                       default=False, help='Print version number and exit')
+    
+    args.add_argument('--more_help', dest='more_help', action='store_true',
+                       default=False, help='Print extened help and exit')
 
     args.parse_args()
     return args.nested_opts_dict                  
@@ -151,7 +156,7 @@ def parse_cmdargs():
 
 
 
-# In[21]:
+# In[10]:
 
 
 def read_config(files):
@@ -170,7 +175,7 @@ def read_config(files):
 
 
 
-# In[22]:
+# In[56]:
 
 
 def check_drive_path(drive_path=None):
@@ -223,15 +228,19 @@ def check_drive_path(drive_path=None):
 
 This does not appear to be the correct folder for `Cumulative Student Folders.` 
 
-Please try again.
+Choose a different Shared Drive with the button:
+#######################
+# Change Shared Drive #
+#######################
+
 
 If you are sure 
 `{drive_path}` 
-is correct, please contact IT Support and askfor help. 
+is correct, please contact IT Support and ask for help. 
 
-Screenshot or copy this entire text below and provide it to IT Support.
-
+Screenshot or copy this entire text below the line and provide it to IT Support.
 ###########################################################
+
 IT Support:
 {sys.argv[0]}
 The program above uses Google File Stream to create student folders on a Google Shared Drive. The Shared Drive should contain a folder called `Student Cumulative Folders (AKA Student Portfolios)` or something similar. 
@@ -260,17 +269,7 @@ The following steps should be run on the user's computer, signed in as the user
 
 
 
-# In[23]:
-
-
-l = [1, 2, 4]
-for i, j in enumerate(l):
-    __builtin__.print(f'i: {i}; j: {j}')
-
-
-
-
-# In[42]:
+# In[57]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -364,7 +363,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
         print(f'{(index+1)/total*100:.0f}% completed')
 
         if window:
-            sg.one_line_progress_meter('Records Processed:', title='Cumulative Folder Creation', 
+            sg.one_line_progress_meter(title='Cumulative Folder Creation', 
                                        current_value=index+1, 
                                        max_value=len(directories_to_check), 
                                        key='key',
@@ -377,7 +376,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[30]:
+# In[58]:
 
 
 def check_folders(directories, window=None):
@@ -452,7 +451,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[31]:
+# In[59]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -567,7 +566,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[32]:
+# In[60]:
 
 
 # def window_drive_path():
@@ -589,14 +588,22 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[33]:
+# In[ ]:
+
+
+
+
+
+
+
+# In[61]:
 
 
 def window_drive_path():
     drive_path = sg.popup_get_folder('Choose the Google Shared Drive **AND** folder that contains student cumulative folders.', 
                                      title='Select A Shared Drive', 
                                      initial_folder='/Volumes/GoogleDrive/',
-                                     keep_on_top=True, font=constants.FONT)
+                                     keep_on_top=True, font=constants.FONT, location=constants.WIN_LOCATION)
     
     if drive_path:
         drive_path=Path(drive_path)
@@ -609,15 +616,16 @@ def window_drive_path():
 
 
 
-# In[34]:
+# In[62]:
 
 
 def window_csv_file():
     '''launch an interactive window to ask user to specify a student export file'''
+    logging.debug('launching interactive prompt for csv file')
     csv_file = sg.popup_get_file('Select a Student Export File to Process', 
                                  title='Select A Student Export',
                                  initial_folder=Path('~/Downloads').expanduser(),
-                                 keep_on_top=True, font=constants.FONT)
+                                 keep_on_top=True, font=constants.FONT, location=constants.WIN_LOCATION)
     
     if csv_file:
         csv_file = Path(csv_file)
@@ -630,22 +638,38 @@ def window_csv_file():
 
 
 
-# In[35]:
+# In[63]:
 
 
 def print_help():
-    print('this is the help')
+    
+    logging.debug('getting help')
+    console = Console()
+    console.options.max_width = constants.TEXT_WIDTH
+    try:
+        with open(constants.HELP_FILE) as help_file:
+            markdown = Markdown(help_file.read())
+    except Exception as e:
+        logging.error(e)
+        return do_exit(f'Error getting help!\n{e}', 1)
+    
+    console.print(markdown)
+#     return do_exit(' ', 0)
 
 
 
 
-# In[36]:
+# In[64]:
 
 
 def main_program(interactive=False, window=None):
     # set the local logger
     logger = logging.getLogger(__name__)
     logging.info('*'*50+'\n')
+
+    version_info = f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}'
+    logging.debug(version_info)    
+    logging.debug(f'python version: {sys.version}')
     
     # base configuration fle
     config_file = Path(constants.config_file)
@@ -662,10 +686,22 @@ def main_program(interactive=False, window=None):
 
     # merge the command line arguments and the config files; cmd line overwrites files
     config = ArgConfigParse.merge_dict(cfg_files_dict, cmd_args_dict)    
+
+    logging.debug('processing command line options')
     
     if config['__cmd_line']['version']:
         logging.debug('display version and exit')
-        return do_exit(f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}', 0)
+        return do_exit(version_info, 0)
+    
+    if config['__cmd_line']['more_help'] and not interactive:
+        logging.debug('display help and exit')
+        print_help()
+        return do_exit(' ', 0)
+
+    
+#     if interactive:
+#         print(version_info)
+#         window.Refresh()
     
     # handle missing google shared drive paths
     if not config['main']['drive_path']:
@@ -692,6 +728,8 @@ def main_program(interactive=False, window=None):
         else:
             logging.warning(f'unknown or invalid log_level: {ll}')
 
+    logging.debug('loading constants')
+    
     # load file constants
     expected_headers = constants.expected_headers    
     student_dirs = constants.student_dirs
@@ -703,10 +741,14 @@ def main_program(interactive=False, window=None):
     drive_status = check_drive_path(drive_path)
     if not drive_status[0]:
         return do_exit(drive_status[1], 0)
-          
+    
+    logging.debug(f'drive status: {drive_status}')
+
     # get csv_file and drive path
     if interactive:
+        logging.debug('asking user for a student export file to process')
         print('Select a student export file to process')
+        logging.debug('calling window_csv_file()')
         csv_file = window_csv_file()
         if not csv_file:
             return do_exit('Can not proceed without a student export file.', 0)
@@ -719,6 +761,7 @@ def main_program(interactive=False, window=None):
     if not csv_file:
         return do_exit('Student export file missing', 1)
     
+    logging.debug(f'processing csv file: {csv_file}')
     # read the CSV file
     try:
         print(f'Processing {csv_file}...')
@@ -770,6 +813,8 @@ def main_program(interactive=False, window=None):
     confirmed_dirs, unconfirmed_dirs = check_folders(directories, window=window)
     
     
+#     return directories, confirmed_dirs, unconfirmed_dirs    
+    
     print('Preparing records...')
     if interactive:
         window.Refresh()
@@ -797,21 +842,32 @@ def main_program(interactive=False, window=None):
     if len_confirmed > 0:
         s.append('-'*10)
         t_str = csv_files["confirmed"]
-        s.append(f'successfully created/validated folders are recorded in {t_str}')
-        s.append(f'share this file with the PowerSchool Administrator for import')
+        s.append(f'\nsend the file below with the PowerSchool Administrator for import')
+        s.append(f'*************************\n')
+        s.append(f'{t_str}')
+        s.append(f'\n*************************')
     
     if len_unconfirmed > 0:
         t_str = csv_files["unconfirmed"]
         s.append('-'*10)
         s.append(f'{len_unconfirmed} rows could not be confirmed')
-        s.append(f'to try again, run this program again using the file: {t_str}')
+        s.append(f'review the file below for more information on the failed rows:')
+        s.append(f'*************************\n')
+        s.append(f'{t_str}')
+        s.append(f'\n*************************')
     
     if len(invalid_rows) > 1:
         s.append('-'*10)
         s.append(f'{len(invalid_rows)-1} rows contained invalid data and were skipped')
         s.append('please ONLY use student.export files produced by PowerSchool')
         t_str = csv_files["invalid"]
-        s.append(f'rows that could not be processed are recorded in: {t_str}')
+        s.append(f'review the file below for more information on the invalid rows:')
+        s.append(f'*************************\n')
+        s.append(f'{t_str}')
+        s.append(f'\n*************************')
+
+    
+
     
     print(s.string)
     if interactive:
@@ -823,15 +879,15 @@ def main_program(interactive=False, window=None):
 
     logging.debug('done')
     
-    return do_exit('Done', 0)
+    return do_exit('Done - Ready to process another file', 0)
 
 
 
 
-# In[37]:
+# In[65]:
 
 
-# # sys.argv.append('-v')
+# # # # sys.argv.append('-v')
 
 # sys.argv.append('-s')
 
@@ -840,7 +896,15 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[38]:
+# In[66]:
+
+
+# sys.argv.append('--help')
+
+
+
+
+# In[67]:
 
 
 # sys.argv.pop()
@@ -848,16 +912,15 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[39]:
+# In[68]:
 
 
 # f = main_program()
-# f()
 
 
 
 
-# In[40]:
+# In[ ]:
 
 
 run_gui = False
@@ -868,6 +931,7 @@ if '-f' in sys.argv:
     logging.debug('likely running in a jupyter environment')
     run_gui = True
 
+
 if run_gui:
     # set the global constant for text width
     TEXT_WIDTH = constants.TEXT_WIDTH
@@ -876,15 +940,20 @@ if run_gui:
     # create a wrapper that matches the text output size
     logging.debug('redefining `print` to use `wrap_print`')
     print = wrap_print
+    version_info = f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}'
     
-    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font=FONT)
-    layout =[ [text_fmt('Cumulative Portfolio Creator')],
-      [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE-2}')],
-      [sg.Output(size=(TEXT_WIDTH+10, 35), font=FONT)],
-      [sg.Button('Process File'), sg.Button('Change Shared Drive'), sg.Button('Help'), sg.Button('EXIT')],
+    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs)
+    layout =[ [text_fmt('Cumulative Portfolio Creator', font=f'{constants.FONT_FACE} {constants.FONT_SIZE+2}')],             
+      [text_fmt(version_info, font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
+      [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
+      [sg.Output(size=(TEXT_WIDTH+30, 40), font=FONT)],
+      [sg.Button('Process File', font=FONT), sg.Button('Change Shared Drive', font=FONT), sg.Button('Help', font=FONT), sg.Button('Exit', font=FONT)],
             ]
 
-    window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False)
+    window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False, location=constants.WIN_LOCATION)
+    
+    bprint('Choose a file to process...')
+    window.Refresh()
 
     while True:
         
@@ -892,24 +961,23 @@ if run_gui:
         window.BringToFront()
         (event, value) = window.read()
 
-        if event == 'EXIT' or event == sg.WIN_CLOSED:
+        if event == 'Exit' or event == sg.WIN_CLOSED:
             break
         if event == 'Process File':
             ret_val = main_program(run_gui, window)
             ret_val()
-#             print(p)
         if event == 'Change Shared Drive':
             drive = window_drive_path()
             if drive:
                 sys.argv.append('-g')
                 sys.argv.append(str(drive))
-                print(f'Shared drive will be updated to {drive} on next execution.')
+                print(f'Shared drive will be updated to\n{drive}\non next execution.')
+                window.Refresh()
             else:
                 print('Shared drive will not be updated')
-#             ret_val = main_program(run_gui)
-#             ret_val()
         if event == 'Help':
             print_help()
+            window.Refresh()
     window.close()
     sg.easy_print_close()
 
