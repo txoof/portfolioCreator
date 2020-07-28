@@ -2,15 +2,15 @@
 # coding: utf-8
 
 
-# In[63]:
+# In[1]:
 
 
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert filestream.ipynb ./filestream')
+#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert filestream.ipynb')
 
 
 
 
-# In[64]:
+# In[8]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -27,13 +27,15 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[ ]:
+# In[4]:
 
 
-import class_constants
+# import class_constants
+from . import class_constants
 from pathlib import Path
 import subprocess
 import os
+import glob
 
 
 
