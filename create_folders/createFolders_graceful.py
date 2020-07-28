@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[ ]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[ ]:
+# In[3]:
 
 
 import builtins
@@ -31,8 +31,6 @@ import builtins
 # reassign the builtins.print function to bprint
 bprint = builtins.print
 
-import constants
-# import class_constants
 # import & config logging first to prevent any sub modules from creating the root logger
 import logging
 from logging import handlers
@@ -45,8 +43,9 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 # In[ ]:
 
 
+import constants
+import error_msgs
 from helpers import *
-
 from filestream import GoogleDrivePath, GDStudentPath
 
 
@@ -175,14 +174,6 @@ def read_config(files):
 
 
 
-# In[7]:
-
-
-import errors
-
-
-
-
 # In[ ]:
 
 
@@ -213,7 +204,8 @@ def check_drive_path(drive_path=None):
     if not drive_path.exists():
         logging.warning(f'specified path "{drive_path}" does not exist')
         drive_ok = False
-        msg = f'The Google Drive "{drive_path}" does not appear to exist on Google Drive'
+#         msg = f'The Google Drive "{drive_path}" does not appear to exist on Google Drive'
+        msg = error_msgs.PATH_ERROR.format(drive_path=drive_path)
         return drive_ok, msg
     else:
         google_drive = GoogleDrivePath(drive_path)
@@ -222,7 +214,8 @@ def check_drive_path(drive_path=None):
         google_drive.get_xattr('user.drive.id')
     except ChildProcessError as e:
         logging.warning(f'specified path "{drive_path}" is not a Google Drive path')
-        msg = f'The Google Drive "{drive_path}" does not appear to be a valid google Shared Drive'
+#         msg = f'The Google Drive "{drive_path}" does not appear to be a valid google Shared Drive'
+        msg = error_msgs.NON_GDRIVE_ERROR.format(drive_path=drive_path)
         drive_ok = False
         return drive_ok, msg
 
@@ -231,7 +224,7 @@ def check_drive_path(drive_path=None):
     
     if not sentry_file_path.is_file():
         logging.warning(f'sentry file is missing in specified path "{drive_path}"')
-        msg = f'{errors.SENTRY_ERROR}'.format(drive_path=drive_path, sentry_file=sentry_file)
+        msg = error_msgs.SENTRY_ERROR.format(drive_path=drive_path, sentry_file=sentry_file)
 #         msg = f'''The file: "{sentry_file}" is missing from the chosen shared drive:
 # `{drive_path}`
 
@@ -274,6 +267,16 @@ def check_drive_path(drive_path=None):
     
     
     return drive_ok, msg
+
+
+
+
+# In[ ]:
+
+
+import error_msgs
+f = check_drive_path('/Volumes/GoogleDrive/Shared drives/IT Blabla/')
+print(f[1])
 
 
 
@@ -708,10 +711,6 @@ def main_program(interactive=False, window=None):
         return do_exit(' ', 0)
 
     
-#     if interactive:
-#         print(version_info)
-#         window.Refresh()
-    
     # handle missing google shared drive paths
     if not config['main']['drive_path']:
         if interactive:
@@ -755,9 +754,7 @@ def main_program(interactive=False, window=None):
 
     # get csv_file and drive path
     if interactive:
-        logging.debug('asking user for a student export file to process')
         print('Select a student export file to process')
-        logging.debug('calling window_csv_file()')
         csv_file = window_csv_file()
         if not csv_file:
             return do_exit('Can not proceed without a student export file.', 0)
@@ -896,42 +893,6 @@ def main_program(interactive=False, window=None):
 # In[ ]:
 
 
-# # # # sys.argv.append('-v')
-
-# sys.argv.append('-s')
-
-# sys.argv.append('./data/invalid.student.export.text')
-
-
-
-
-# In[ ]:
-
-
-# sys.argv.append('--help')
-
-
-
-
-# In[ ]:
-
-
-# sys.argv.pop()
-
-
-
-
-# In[ ]:
-
-
-# f = main_program()
-
-
-
-
-# In[ ]:
-
-
 run_gui = False
 if len(sys.argv) <= 1:
     run_gui = True
@@ -994,13 +955,5 @@ if run_gui:
 else:
     ret_val = main_program()
     ret_val()
-
-
-
-
-# In[ ]:
-
-
-
 
 
