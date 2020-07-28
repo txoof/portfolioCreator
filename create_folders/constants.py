@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 # basics #
 ##########
 version = '0.1.00'
@@ -8,11 +9,15 @@ devel_name = 'com.txoof'
 contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
 git_repo = f'https://github.com/txoof/{app_name}'
 
+# local root directory -- avoid relative path hell!
+_root_dir = Path(__file__).absolute().parent
+
 # config files #
 ################
 
 # logging configuration
-logging_config = Path('logging_cfg.ini')
+#logging_config = Path('./logging_cfg.ini').absolute()
+logging_config = _root_dir/'logging_cfg.ini'
 # logging file location
 log_file = Path('~/'+app_name+'.log').expanduser().absolute()
 
