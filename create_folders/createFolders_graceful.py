@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[36]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[33]:
+# In[ ]:
 
 
 import builtins
@@ -42,7 +42,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[4]:
+# In[ ]:
 
 
 from helpers import *
@@ -52,7 +52,7 @@ from filestream import GoogleDrivePath, GDStudentPath
 
 
 
-# In[5]:
+# In[ ]:
 
 
 import sys
@@ -71,7 +71,7 @@ import PySimpleGUI as sg
 
 
 
-# In[7]:
+# In[ ]:
 
 
 class multi_line_string():
@@ -109,7 +109,7 @@ class multi_line_string():
 
 
 
-# In[49]:
+# In[ ]:
 
 
 def wrap_print(t='', width=None):
@@ -127,7 +127,7 @@ def wrap_print(t='', width=None):
 
 
 
-# In[9]:
+# In[ ]:
 
 
 def parse_cmdargs():
@@ -156,7 +156,7 @@ def parse_cmdargs():
 
 
 
-# In[10]:
+# In[ ]:
 
 
 def read_config(files):
@@ -175,7 +175,15 @@ def read_config(files):
 
 
 
-# In[56]:
+# In[7]:
+
+
+import errors
+
+
+
+
+# In[ ]:
 
 
 def check_drive_path(drive_path=None):
@@ -223,42 +231,43 @@ def check_drive_path(drive_path=None):
     
     if not sentry_file_path.is_file():
         logging.warning(f'sentry file is missing in specified path "{drive_path}"')
-        msg = f'''The file: "{sentry_file}" is missing from the chosen shared drive:
-`{drive_path}`
+        msg = f'{errors.SENTRY_ERROR}'.format(drive_path=drive_path, sentry_file=sentry_file)
+#         msg = f'''The file: "{sentry_file}" is missing from the chosen shared drive:
+# `{drive_path}`
 
-This does not appear to be the correct folder for `Cumulative Student Folders.` 
+# This does not appear to be the correct folder for `Cumulative Student Folders.` 
 
-Choose a different Shared Drive with the button:
-#######################
-# Change Shared Drive #
-#######################
+# Choose a different Shared Drive with the button:
+# #######################
+# # Change Shared Drive #
+# #######################
 
 
-If you are sure 
-`{drive_path}` 
-is correct, please contact IT Support and ask for help. 
+# If you are sure 
+# `{drive_path}` 
+# is correct, please contact IT Support and ask for help. 
 
-Screenshot or copy this entire text below the line and provide it to IT Support.
-###########################################################
+# Screenshot or copy this entire text below the line and provide it to IT Support.
+# ###########################################################
 
-IT Support:
-{sys.argv[0]}
-The program above uses Google File Stream to create student folders on a Google Shared Drive. The Shared Drive should contain a folder called `Student Cumulative Folders (AKA Student Portfolios)` or something similar. 
+# IT Support:
+# {sys.argv[0]}
+# The program above uses Google File Stream to create student folders on a Google Shared Drive. The Shared Drive should contain a folder called `Student Cumulative Folders (AKA Student Portfolios)` or something similar. 
 
-The program checks for `{sentry_file}` to ensure that the user has selected the appropriate Google Shared Drive **AND** the appropriate folder.
+# The program checks for `{sentry_file}` to ensure that the user has selected the appropriate Google Shared Drive **AND** the appropriate folder.
 
-BEFORE PROCEEDING: Confirm that {drive_path} is correct and contains the `Student Cumulative Folders (AKA Student Portfolios)` folder.
+# BEFORE PROCEEDING: Confirm that {drive_path} is correct and contains the `Student Cumulative Folders (AKA Student Portfolios)` folder.
 
-The following steps should be run on the user's computer, signed in as the user
+# The following steps should be run on the user's computer, signed in as the user
 
-1) Check Google File Stream is running on the user's computer and the use is signed in
-2) Use Finder to verify the user has access to {drive_path}
-3) Check that `Student Cumulative Folders (AKA Student Portfolios)` exists on the Shared Drive above
-4) Open `terminal.app` and run the command below
+# 1) Check Google File Stream is running on the user's computer and the use is signed in
+# 2) Use Finder to verify the user has access to {drive_path}
+# 3) Check that `Student Cumulative Folders (AKA Student Portfolios)` exists on the Shared Drive above
+# 4) Open `terminal.app` and run the command below
 
-     $ touch {drive_path}/{sentry_file}
+#      $ touch {drive_path}/{sentry_file}
      
-5) Try running the program again'''
+# 5) Try running the program again'''
         drive_ok = False
         
     
@@ -269,7 +278,7 @@ The following steps should be run on the user's computer, signed in as the user
 
 
 
-# In[57]:
+# In[ ]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -376,7 +385,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[58]:
+# In[ ]:
 
 
 def check_folders(directories, window=None):
@@ -451,7 +460,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[59]:
+# In[ ]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -566,7 +575,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[60]:
+# In[ ]:
 
 
 # def window_drive_path():
@@ -596,7 +605,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[61]:
+# In[ ]:
 
 
 def window_drive_path():
@@ -616,7 +625,7 @@ def window_drive_path():
 
 
 
-# In[62]:
+# In[ ]:
 
 
 def window_csv_file():
@@ -638,7 +647,7 @@ def window_csv_file():
 
 
 
-# In[63]:
+# In[ ]:
 
 
 def print_help():
@@ -659,7 +668,7 @@ def print_help():
 
 
 
-# In[64]:
+# In[ ]:
 
 
 def main_program(interactive=False, window=None):
@@ -884,7 +893,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[65]:
+# In[ ]:
 
 
 # # # # sys.argv.append('-v')
@@ -896,7 +905,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[66]:
+# In[ ]:
 
 
 # sys.argv.append('--help')
@@ -904,7 +913,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[67]:
+# In[ ]:
 
 
 # sys.argv.pop()
@@ -912,7 +921,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[68]:
+# In[ ]:
 
 
 # f = main_program()
