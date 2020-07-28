@@ -1,14 +1,17 @@
 # Error Messages #
 
 # path does not exist on Google Drive
+# Vars: {drive_path}
 PATH_ERROR = '''{drive_path} does not appear to exist on Google Drive.
 Choose a different Drive and folder.'''
 
 # not a valid shared drive
+# Vars: {drive_path}
 NON_GDRIVE_ERROR = '''{drive_path} is not a Google Drive.
 Choose a Google Shared Drive.'''
 
 # sentry file error
+# Vars: {drive_path}, {sentry_file}
 SENTRY_ERROR = '''The file: "{sentry_file}" is missing from the chosen shared drive:
 `{drive_path}`
 
