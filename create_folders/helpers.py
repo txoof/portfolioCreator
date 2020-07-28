@@ -10,7 +10,7 @@
 
 
 
-# In[20]:
+# In[27]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -42,6 +42,22 @@ from pathlib import Path
 
 
 def do_exit(e='unknown error in unknown module!', exit_status=99, ret_value=None):
+    '''handle exits and return exit function with either a soft_exit or hard_exit -
+        The returned function can be executed by the calling process when it is ready 
+        rather than forcing an exit immediately 
+    
+        soft_exit prints message and optionally logs message
+        hard_exit prints message, logs and calls sys.exit(exit_status)
+    
+    Args:
+        e(`str`): error or message detailing reason for exiting
+        exit_status(int): exit value --
+            0: soft_exit with no logging -- normal exit with no issues
+            1: soft_exit with logging -- exit due to recoverable issue
+            >1: hard_exit with logging -- abort execution with sys.exit(exit_status)
+            
+    Returns:
+        function: soft_exit, hard_exit'''
     help_msg = f'try:\n{sys.argv[0]} -h for help'
     def hard_exit():
         print(e)
@@ -64,8 +80,6 @@ def do_exit(e='unknown error in unknown module!', exit_status=99, ret_value=None
     if exit_status < 1:
         logging.debug(e)
         return(soft_exit)
-        
-    
 
 
 
