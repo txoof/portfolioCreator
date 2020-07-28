@@ -13,7 +13,7 @@
 
 
 
-# In[10]:
+# In[11]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -25,10 +25,7 @@
 # In[2]:
 
 
-import builtins
-# # ### Fix me! REmove this!
-# from pathlib import Path
-# # ## 
+import builtins 
 try:
     from . import constants
 except ImportError:
@@ -44,13 +41,6 @@ import logging
 from logging import handlers
 from logging import config
 logging.config.fileConfig(constants.logging_config, defaults={'logfile': constants.log_file} )
-# lf =  Path('~/foo.log').expanduser().absolute()
-# lc = Path('/Users/aaronciuffo/Documents/src/portfolioCreator/create_folders/logging_cfg.ini')
-# lc = constants.logging_config
-# lf = constants.log_file
-# print(f'set up logging with cfg: {lc}, log file: {lf}')
-# logging.config.fileConfig(lc, defaults={'logfile': lc})
-# logging.config.fileConfig(constants.logging_config, defaults={'logfile': p} )
 
 
 
