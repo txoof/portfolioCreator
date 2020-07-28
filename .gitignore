@@ -3,3 +3,5 @@ Pipfile.lock
 *.csv
 student.export*
 rubish/*
+*/build/*
+*/dist/*
