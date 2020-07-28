@@ -66,7 +66,7 @@ csv_output_path = Path('~/Desktop/').expanduser()/app_name
 csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.csv.txt'
 
 # CSV output dictionary - property name, format string for csv
-csv_output_headers = {'LastFirst': '"{val}"',
+csv_output_headers = {'LastFirst': '{val}',
                       'ClassOf': '{val}',
                       'Student_Number': '{val}',
                       'webview_link': '<a href={val}>Right click link and *Open Link in New Tab* to view student folder</a>'
