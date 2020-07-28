@@ -29,7 +29,7 @@ from rich.markdown import Markdown
 
 
 
-# In[26]:
+# In[27]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -37,19 +37,20 @@ from rich.markdown import Markdown
 
 
 
-# In[20]:
+# In[37]:
 
 
 def main(r=10):
     for i in range(0,r):
         print(f"{i:02}: {'*'*i}")
+        pb.UpdateBar(i + 1)
 
         
 
 
 
 
-# In[21]:
+# In[38]:
 
 
 def hep():
@@ -62,7 +63,7 @@ def hep():
 
 
 
-# In[25]:
+# In[39]:
 
 
 def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font='Courier 15')
@@ -73,10 +74,13 @@ def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs, font=
 layout =[ [text_fmt('Portfolio Creator')],
           [sg.Text('description\nfoo\nbar', font='Courier 11')],
           [sg.Output(size=(100, 40), font='Courier 12')],
+          [sg.Text('current progress:')],
+          [sg.ProgressBar(1000, orientation='h', size=(50, 20), key='progressbar')],
           [sg.Button('GO'), sg.Button('Help'), sg.Button('EXIT')],
 ]
 
 window = sg.Window('Foo Window', layout=layout, keep_on_top=False)
+pb = window['progressbar']
 # print = sg.Print
 
 while True:
@@ -96,6 +100,15 @@ while True:
         hep()
 window.close()
 sg.easy_print_close()
+
+
+
+
+# In[40]:
+
+
+for i in range(1,10000):
+    sg.one_line_progress_meter('My Meter', i+1, 10000, 'key','Optional message')
 
 
 
