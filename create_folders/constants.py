@@ -62,7 +62,7 @@ date_format = "%Y-%m-%d_%H.%M"
 
 # default output path
 csv_output_path = Path('~/Desktop/').expanduser()/app_name
-# default csv filename
+# PowerSchool Admin Import CSV filename
 csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.csv.txt'
 
 # CSV output dictionary - property name, format string for csv
@@ -72,7 +72,7 @@ csv_output_headers = {'LastFirst': '{val}',
                       'webview_link': '<a href={val}>Right click link and *Open Link in New Tab* to view student folder</a>'
                       }
 
-# invalid rows CSV 
+# invalid rows CSV file name
 csv_invalid_name = '{date}_Portfolio_Invalid_Rows.csv'
 
 # ERROR CSV output dictionary:
