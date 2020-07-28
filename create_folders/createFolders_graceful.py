@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[2]:
+# In[10]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
@@ -22,20 +22,35 @@
 
 
 
-# In[3]:
+# In[2]:
 
 
 import builtins
+# # ### Fix me! REmove this!
+# from pathlib import Path
+# # ## 
+try:
+    from . import constants
+except ImportError:
+    import constants
 
 # I'm not sure why this is needed, but this resolves a runtime crash when run from the command line
 # reassign the builtins.print function to bprint
 bprint = builtins.print
+
 
 # import & config logging first to prevent any sub modules from creating the root logger
 import logging
 from logging import handlers
 from logging import config
 logging.config.fileConfig(constants.logging_config, defaults={'logfile': constants.log_file} )
+# lf =  Path('~/foo.log').expanduser().absolute()
+# lc = Path('/Users/aaronciuffo/Documents/src/portfolioCreator/create_folders/logging_cfg.ini')
+# lc = constants.logging_config
+# lf = constants.log_file
+# print(f'set up logging with cfg: {lc}, log file: {lf}')
+# logging.config.fileConfig(lc, defaults={'logfile': lc})
+# logging.config.fileConfig(constants.logging_config, defaults={'logfile': p} )
 
 
 
@@ -43,10 +58,20 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 # In[ ]:
 
 
-import constants
-import error_msgs
-from helpers import *
-from filestream import GoogleDrivePath, GDStudentPath
+try:
+    from . import error_msgs
+except ImportError:
+    import error_msgs
+
+try:
+    from .helpers import *
+except ImportError:
+    from helpers import *
+
+try:
+    from .filestream import GoogleDrivePath, GDStudentPath
+except ImportError:
+    from filestream import GoogleDrivePath, GDStudentPath
 
 
 
@@ -267,16 +292,6 @@ def check_drive_path(drive_path=None):
     
     
     return drive_ok, msg
-
-
-
-
-# In[ ]:
-
-
-import error_msgs
-f = check_drive_path('/Volumes/GoogleDrive/Shared drives/IT Blabla/')
-print(f[1])
 
 
 
@@ -893,67 +908,86 @@ def main_program(interactive=False, window=None):
 # In[ ]:
 
 
-run_gui = False
-if len(sys.argv) <= 1:
-    run_gui = True
-    
-if '-f' in sys.argv:
-    logging.debug('likely running in a jupyter environment')
-    run_gui = True
+def main():
+    '''launch the cli or gui version of the script '''
+    run_gui = False
+    if len(sys.argv) <= 1:
+        run_gui = True
+
+    if '-f' in sys.argv:
+        logging.debug('likely running in a jupyter environment')
+        run_gui = True
 
 
-if run_gui:
-    # set the global constant for text width
-    TEXT_WIDTH = constants.TEXT_WIDTH
-    FONT = constants.FONT
+    if run_gui:
+        # set the global constant for text width
+        TEXT_WIDTH = constants.TEXT_WIDTH
+        FONT = constants.FONT
 
-    # create a wrapper that matches the text output size
-    logging.debug('redefining `print` to use `wrap_print`')
-    print = wrap_print
-    version_info = f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}'
-    
-    def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs)
-    layout =[ [text_fmt('Cumulative Portfolio Creator', font=f'{constants.FONT_FACE} {constants.FONT_SIZE+2}')],             
-      [text_fmt(version_info, font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
-      [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
-      [sg.Output(size=(TEXT_WIDTH+30, 40), font=FONT)],
-      [sg.Button('Process File', font=FONT), sg.Button('Change Shared Drive', font=FONT), sg.Button('Help', font=FONT), sg.Button('Exit', font=FONT)],
-            ]
+        # create a wrapper that matches the text output size
+        logging.debug('redefining `print` to use `wrap_print`')
+        print = wrap_print
+        version_info = f'{constants.app_name} version: {constants.version}\n{constants.contact}\n{constants.git_repo}'
 
-    window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False, location=constants.WIN_LOCATION)
-    
-    bprint('Choose a file to process...')
-    window.Refresh()
+        def text_fmt(text, *args, **kwargs): return sg.Text(text, *args, **kwargs)
+        layout =[ [text_fmt('Cumulative Portfolio Creator', font=f'{constants.FONT_FACE} {constants.FONT_SIZE+2}')],             
+          [text_fmt(version_info, font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
+          [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
+          [sg.Output(size=(TEXT_WIDTH+30, 40), font=FONT)],
+          [sg.Button('Process File', font=FONT), sg.Button('Change Shared Drive', font=FONT), sg.Button('Help', font=FONT), sg.Button('Exit', font=FONT)],
+                ]
 
-    while True:
-        
-        window.finalize()
-        window.BringToFront()
-        (event, value) = window.read()
+        window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False, location=constants.WIN_LOCATION)
 
-        if event == 'Exit' or event == sg.WIN_CLOSED:
-            break
-        if event == 'Process File':
-            ret_val = main_program(run_gui, window)
-            ret_val()
-        if event == 'Change Shared Drive':
-            drive = window_drive_path()
-            if drive:
-                sys.argv.append('-g')
-                sys.argv.append(str(drive))
-                print(f'Shared drive will be updated to\n{drive}\non next execution.')
+        bprint('Choose a file to process...')
+        window.Refresh()
+
+        while True:
+
+            window.finalize()
+            window.BringToFront()
+            (event, value) = window.read()
+
+            if event == 'Exit' or event == sg.WIN_CLOSED:
+                break
+            if event == 'Process File':
+                ret_val = main_program(run_gui, window)
+                ret_val()
+            if event == 'Change Shared Drive':
+                drive = window_drive_path()
+                if drive:
+                    sys.argv.append('-g')
+                    sys.argv.append(str(drive))
+                    print(f'Shared drive will be updated to\n{drive}\non next execution.')
+                    window.Refresh()
+                else:
+                    print('Shared drive will not be updated')
+            if event == 'Help':
+                print_help()
                 window.Refresh()
-            else:
-                print('Shared drive will not be updated')
-        if event == 'Help':
-            print_help()
-            window.Refresh()
-    window.close()
-    sg.easy_print_close()
+        window.close()
+        sg.easy_print_close()
 
-# run in non-interactive command line mode
-else:
-    ret_val = main_program()
-    ret_val()
+    # run in non-interactive command line mode
+    else:
+        ret_val = main_program()
+        ret_val()
+
+
+
+
+# In[ ]:
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
