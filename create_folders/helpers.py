@@ -10,7 +10,7 @@
 
 
 
-# In[27]:
+# In[28]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -80,25 +80,6 @@ def do_exit(e='unknown error in unknown module!', exit_status=99, ret_value=None
     if exit_status < 1:
         logging.debug(e)
         return(soft_exit)
-
-
-
-
-# In[ ]:
-
-
-# def do_exit(e='unknown error in unknown module!', exit_status=99):
-
-        
-#     print('\n'*4)
-#     if exit_status == 1:
-#         logging.warning(f'exited before completion with exit code {exit_status}')
-#         logging.warning(e)  
-#     elif exit_status > 1:
-#         logging.error(f'fatal error:\n\t{e}')
-#     print(e)
-# #     sg.PrintClose()
-#     sys.exit(exit_status)
 
 
 
@@ -236,6 +217,11 @@ def adjust_handler(handler=None, new_level=None):
 
 
 def csv_writer(rows_list, path):
+    '''write a list to csv with minimal quoting 
+    
+    Args:
+        rows_list(`list`): list of lists to convert to csv
+        path(`str` or `Path`): path to output file'''
     logging.debug(f'writing csv file: {path}')
     with open(path, 'w', newline='') as file:
         writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
@@ -249,7 +235,13 @@ def csv_writer(rows_list, path):
 
 
 def len_of_dict(my_set):
-    '''calculate the overall length of a dict of list like objects'''
+    '''calculate the overall length of a dict of list like objects
+    
+    Args:
+        my_set(`dict` or dict-like object): dictonary to assess
+        
+    Returns:
+        int - length of all elements'''
     total = 0
     for each_set in my_set:
         total = total + len(my_set[each_set])
