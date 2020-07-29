@@ -3,7 +3,7 @@ source_path=./create_folders
 publish_tar=createFolders.tgz
 
 if [ -z "$1" ]; then
-  echo Build a pyinstaller, tar build, tag and push release to github
+  echo tar build, tag and push release to github
   echo usage:
   echo $0 "release comment"
   exit 0
