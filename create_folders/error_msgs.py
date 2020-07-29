@@ -2,12 +2,12 @@
 
 # path does not exist on Google Drive
 # Vars: {drive_path}
-PATH_ERROR = '''{drive_path} does not appear to exist on Google Drive.
+PATH_ERROR = '''"{drive_path}" does not appear to exist on Google Drive.
 Choose a different Drive and folder.'''
 
 # not a valid shared drive
 # Vars: {drive_path}
-NON_GDRIVE_ERROR = '''{drive_path} is not a Google Drive.
+NON_GDRIVE_ERROR = '''"{drive_path}" is not a Google Drive.
 Choose a Google Shared Drive.'''
 
 # sentry file error
