@@ -147,8 +147,23 @@ Google FileStream is required for createFolders. The user must be signed in with
     * It may take several minutes before your folders and files are all visible
 5. Browse to the `Shared drives` and locate the `ASH Student Cumulative Folders` drive to confirm you have access
     * If you do not have access, you have likely used an account that does not have permissions. Sign out and try again.
+    
+### Complete Uninstall
+To completely uninstall the application do the following:
+1. Remove the executable `createFolders` application
+2. From the terminal run `$ rm -rf ~/.config/com.txoof.createFolders`
+
 
 
 ```python
-%alias ~/bin/d
+%alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
+%mdc
+```
+
+    [NbConvertApp] Converting notebook README.ipynb to markdown
+
+
+
+```python
+
 ```
