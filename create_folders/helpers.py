@@ -10,7 +10,7 @@
 
 
 
-# In[28]:
+# In[29]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -41,7 +41,7 @@ from pathlib import Path
 # In[22]:
 
 
-def do_exit(e='unknown error in unknown module!', exit_status=99, ret_value=None):
+def do_exit(e='unknown error in unknown module!', exit_status=99):
     '''handle exits and return exit function with either a soft_exit or hard_exit -
         The returned function can be executed by the calling process when it is ready 
         rather than forcing an exit immediately 
