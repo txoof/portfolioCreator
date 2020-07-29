@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[2]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 import builtins 
@@ -45,7 +45,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[4]:
+# In[ ]:
 
 
 try:
@@ -66,7 +66,7 @@ except ImportError:
 
 
 
-# In[5]:
+# In[ ]:
 
 
 import sys
@@ -85,7 +85,7 @@ import PySimpleGUI as sg
 
 
 
-# In[6]:
+# In[ ]:
 
 
 class multi_line_string():
@@ -115,7 +115,7 @@ class multi_line_string():
     def string(self, s):
         self._string = s
     
-    def append (self, s):
+    def append(self, s):
         self._string = self._string + s + '\n'
         
     
@@ -123,7 +123,7 @@ class multi_line_string():
 
 
 
-# In[7]:
+# In[ ]:
 
 
 def wrap_print(t='', width=None, supress_print=False):
@@ -151,7 +151,7 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-# In[8]:
+# In[ ]:
 
 
 def parse_cmdargs():
@@ -180,7 +180,7 @@ def parse_cmdargs():
 
 
 
-# In[9]:
+# In[ ]:
 
 
 def read_config(files):
@@ -199,7 +199,7 @@ def read_config(files):
 
 
 
-# In[10]:
+# In[ ]:
 
 
 def check_drive_path(drive_path=None):
@@ -260,7 +260,7 @@ def check_drive_path(drive_path=None):
 
 
 
-# In[11]:
+# In[ ]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -367,7 +367,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[12]:
+# In[ ]:
 
 
 def check_folders(directories, window=None):
@@ -442,7 +442,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[13]:
+# In[ ]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -557,7 +557,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[14]:
+# In[ ]:
 
 
 # def window_drive_path():
@@ -579,7 +579,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[15]:
+# In[ ]:
 
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
@@ -592,7 +592,7 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-# In[17]:
+# In[ ]:
 
 
 def window_drive_path():
@@ -615,7 +615,7 @@ def window_drive_path():
 
 
 
-# In[18]:
+# In[ ]:
 
 
 def window_csv_file():
@@ -637,7 +637,7 @@ def window_csv_file():
 
 
 
-# In[19]:
+# In[ ]:
 
 
 def print_help():
@@ -658,7 +658,7 @@ def print_help():
 
 
 
-# In[20]:
+# In[ ]:
 
 
 def main_program(interactive=False, window=None):
@@ -868,7 +868,8 @@ def main_program(interactive=False, window=None):
         window.Refresh()
     
     if interactive:
-        sg.popup(s, title='Summary', font=constants.FONT, keep_on_top=True)
+#         sg.popup(s, title='Summary', font=constants.FONT, keep_on_top=True)
+        sg.popup_scrolled(s, title='Summary', font=constants.FONT, size=(constants.TEXT_WIDTH*2, None))
     
 
     logging.debug('done')
@@ -878,7 +879,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[21]:
+# In[ ]:
 
 
 def main():
@@ -912,14 +913,18 @@ def main():
                 ]
 
         window = sg.Window('Cumulative Portfolio Creator', layout=layout, keep_on_top=False, location=constants.WIN_LOCATION)
-
-        bprint('Choose a file to process...')
+        
+        window.finalize()
+        window.BringToFront()
+        bprint(f'Comprehensive log files are stored in {constants.log_file}\n')
+        bprint('Choose a student.export from PowerSchool to process by clicking "Process File"')
         window.Refresh()
+
+#         window_attention('Choose a file to process by clicking "Process File" button')
 
         while True:
 
-            window.finalize()
-            window.BringToFront()
+  
             (event, value) = window.read()
 
             if event == 'Exit' or event == sg.WIN_CLOSED:
@@ -954,7 +959,7 @@ def main():
 
 
 
-# In[22]:
+# In[ ]:
 
 
 if __name__ == '__main__':
