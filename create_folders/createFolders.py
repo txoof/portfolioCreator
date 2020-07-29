@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[ ]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[ ]:
+# In[3]:
 
 
 import builtins 
@@ -45,7 +45,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[ ]:
+# In[4]:
 
 
 try:
@@ -66,7 +66,7 @@ except ImportError:
 
 
 
-# In[ ]:
+# In[5]:
 
 
 import sys
@@ -85,7 +85,7 @@ import PySimpleGUI as sg
 
 
 
-# In[ ]:
+# In[6]:
 
 
 class multi_line_string():
@@ -123,10 +123,18 @@ class multi_line_string():
 
 
 
-# In[ ]:
+# In[7]:
 
 
-def wrap_print(t='', width=None):
+def wrap_print(t='', width=None, supress_print=False):
+    '''print a text-wrapped string
+    
+    Args:
+        t(`str`): text to wrap
+        width(`int`): characters to wrap -- defaults to constants.TEXT_WIDTH
+        
+    Returns:
+        str'''
     if not width:
         width = constants.TEXT_WIDTH
         
@@ -136,12 +144,14 @@ def wrap_print(t='', width=None):
 #     pdb.set_trace()
 # this causes a runtime crash; it's unclear why, but is resolved by reassigning bprint = builtins.print 
 #     builtins.print(result)
-    bprint(result)
+    if not supress_print:
+        bprint(result)
+    return result
 
 
 
 
-# In[ ]:
+# In[8]:
 
 
 def parse_cmdargs():
@@ -170,7 +180,7 @@ def parse_cmdargs():
 
 
 
-# In[ ]:
+# In[9]:
 
 
 def read_config(files):
@@ -189,7 +199,7 @@ def read_config(files):
 
 
 
-# In[ ]:
+# In[10]:
 
 
 def check_drive_path(drive_path=None):
@@ -240,42 +250,6 @@ def check_drive_path(drive_path=None):
     if not sentry_file_path.is_file():
         logging.warning(f'sentry file is missing in specified path "{drive_path}"')
         msg = error_msgs.SENTRY_ERROR.format(drive_path=drive_path, sentry_file=sentry_file)
-#         msg = f'''The file: "{sentry_file}" is missing from the chosen shared drive:
-# `{drive_path}`
-
-# This does not appear to be the correct folder for `Cumulative Student Folders.` 
-
-# Choose a different Shared Drive with the button:
-# #######################
-# # Change Shared Drive #
-# #######################
-
-
-# If you are sure 
-# `{drive_path}` 
-# is correct, please contact IT Support and ask for help. 
-
-# Screenshot or copy this entire text below the line and provide it to IT Support.
-# ###########################################################
-
-# IT Support:
-# {sys.argv[0]}
-# The program above uses Google File Stream to create student folders on a Google Shared Drive. The Shared Drive should contain a folder called `Student Cumulative Folders (AKA Student Portfolios)` or something similar. 
-
-# The program checks for `{sentry_file}` to ensure that the user has selected the appropriate Google Shared Drive **AND** the appropriate folder.
-
-# BEFORE PROCEEDING: Confirm that {drive_path} is correct and contains the `Student Cumulative Folders (AKA Student Portfolios)` folder.
-
-# The following steps should be run on the user's computer, signed in as the user
-
-# 1) Check Google File Stream is running on the user's computer and the use is signed in
-# 2) Use Finder to verify the user has access to {drive_path}
-# 3) Check that `Student Cumulative Folders (AKA Student Portfolios)` exists on the Shared Drive above
-# 4) Open `terminal.app` and run the command below
-
-#      $ touch {drive_path}/{sentry_file}
-     
-# 5) Try running the program again'''
         drive_ok = False
         
     
@@ -286,7 +260,7 @@ def check_drive_path(drive_path=None):
 
 
 
-# In[ ]:
+# In[11]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -393,7 +367,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[ ]:
+# In[12]:
 
 
 def check_folders(directories, window=None):
@@ -468,7 +442,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[ ]:
+# In[13]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -583,7 +557,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
+# In[14]:
 
 
 # def window_drive_path():
@@ -605,22 +579,30 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
+# In[15]:
+
+
+def window_attention(e, title=None, width=constants.TEXT_WIDTH):
+    sg.popup_scrolled(wrap_print(e, width, supress_print=True), size=(width+10, None),
+                      title=title,
+                      button_color=('black', 'red'),
+                      keep_on_top=True,
+                      font=constants.FONT)
 
 
 
 
-
-
-
-# In[ ]:
+# In[17]:
 
 
 def window_drive_path():
+#     win_location = (constants.WIN_LOCATION[0], constants.WIN_LOCATION[1]+(constants.TEXT_ROWS*constants.FONT_SIZE))
     drive_path = sg.popup_get_folder('Choose the Google Shared Drive **AND** folder that contains student cumulative folders.', 
                                      title='Select A Shared Drive', 
                                      initial_folder='/Volumes/GoogleDrive/',
-                                     keep_on_top=True, font=constants.FONT, location=constants.WIN_LOCATION)
+                                     keep_on_top=True, font=constants.FONT, 
+                                     location=constants.POPUP_LOCATION)
+#                                      location=constants.WIN_LOCATION)
     
     if drive_path:
         drive_path=Path(drive_path)
@@ -633,7 +615,7 @@ def window_drive_path():
 
 
 
-# In[ ]:
+# In[18]:
 
 
 def window_csv_file():
@@ -642,7 +624,7 @@ def window_csv_file():
     csv_file = sg.popup_get_file('Select a Student Export File to Process', 
                                  title='Select A Student Export',
                                  initial_folder=Path('~/Downloads').expanduser(),
-                                 keep_on_top=True, font=constants.FONT, location=constants.WIN_LOCATION)
+                                 keep_on_top=True, font=constants.FONT, location=constants.POPUP_LOCATION)
     
     if csv_file:
         csv_file = Path(csv_file)
@@ -655,7 +637,7 @@ def window_csv_file():
 
 
 
-# In[ ]:
+# In[19]:
 
 
 def print_help():
@@ -671,12 +653,12 @@ def print_help():
         return do_exit(f'Error getting help!\n{e}', 1)
     
     console.print(markdown)
-#     return do_exit(' ', 0)
+    return do_exit(' ', 0)
 
 
 
 
-# In[ ]:
+# In[20]:
 
 
 def main_program(interactive=False, window=None):
@@ -762,7 +744,8 @@ def main_program(interactive=False, window=None):
         print('Select a student export file to process')
         csv_file = window_csv_file()
         if not csv_file:
-            return do_exit('Can not proceed without a student export file.', 0)
+            msg = 'Can not proceed without a student export file.'
+            return do_exit(msg, 0)
     else:
         try:
             csv_file = Path(config['__cmd_line']['student_export'])
@@ -796,7 +779,7 @@ def main_program(interactive=False, window=None):
     header_map, missing_headers = map_headers(csv_list, expected_headers.keys())
     
     if len(missing_headers) > 0:
-        return do_exit(f'{csv_file.name} is missing one or more column headers:\n{missing_headers}\n\ncan not proceed with this file', 0)
+        return do_exit(f'"{csv_file.name}" is missing one or more column headers:\n{missing_headers}\n\ncan not proceed with this file', 0)
     
     # validate rows in the CSV file
     print(f'checking each row for valid data')
@@ -895,7 +878,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[21]:
 
 
 def main():
@@ -912,6 +895,7 @@ def main():
     if run_gui:
         # set the global constant for text width
         TEXT_WIDTH = constants.TEXT_WIDTH
+        TEXT_ROWS = constants.TEXT_ROWS
         FONT = constants.FONT
 
         # create a wrapper that matches the text output size
@@ -923,7 +907,7 @@ def main():
         layout =[ [text_fmt('Cumulative Portfolio Creator', font=f'{constants.FONT_FACE} {constants.FONT_SIZE+2}')],             
           [text_fmt(version_info, font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
           [sg.Text('Create Cumulative Folders on Google Shared Drive', font=f'{constants.FONT_FACE} {constants.FONT_SIZE}')],
-          [sg.Output(size=(TEXT_WIDTH+30, 40), font=FONT)],
+          [sg.Output(size=(TEXT_WIDTH+30, TEXT_ROWS), font=FONT)],
           [sg.Button('Process File', font=FONT), sg.Button('Change Shared Drive', font=FONT), sg.Button('Help', font=FONT), sg.Button('Exit', font=FONT)],
                 ]
 
@@ -942,6 +926,7 @@ def main():
                 break
             if event == 'Process File':
                 ret_val = main_program(run_gui, window)
+                window_attention(ret_val())
                 ret_val()
             if event == 'Change Shared Drive':
                 drive = window_drive_path()
@@ -953,9 +938,12 @@ def main():
                 else:
                     print('Shared drive will not be updated')
             if event == 'Help':
-                print_help()
+                ret_val = print_help()
+                ret_val()
                 window.Refresh()
+                
         window.close()
+        window.Close()
         sg.easy_print_close()
 
     # run in non-interactive command line mode
@@ -966,7 +954,7 @@ def main():
 
 
 
-# In[ ]:
+# In[22]:
 
 
 if __name__ == '__main__':
