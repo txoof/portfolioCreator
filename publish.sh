@@ -1,6 +1,6 @@
 #!/bin/zsh
 source_path=./create_folders
-publish_tar=portfolioCreator.tgz
+publish_tar=createFolders.tgz
 
 if [ -z "$1" ]; then
   echo Build a pyinstaller, tar build, tag and push release to github
@@ -10,12 +10,12 @@ if [ -z "$1" ]; then
 fi
 
 # run the build script
-./build.sh
+#./build.sh
 
 version_number=`grep version $source_path/constants.py | sed -nE  's/^version[ ]+=[ ]+(.*)/\1/p' | tr -d \'\"`
 
-tag = "v$version_number"
+tag="v$version_number"
 
-git tag $tag
+git tag -a "$tag" -m "$1"
 git commit -m "update tar distribution $1" $publish_tar
 git push origin $tag $1
