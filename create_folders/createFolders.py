@@ -13,16 +13,16 @@
 
 
 
-# In[12]:
+# In[ ]:
 
 
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders_graceful.ipynb')
+#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
 #get_ipython().run_line_magic('nb_convert', '')
 
 
 
 
-# In[2]:
+# In[ ]:
 
 
 import builtins 
