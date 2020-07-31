@@ -1,28 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[ ]:
-
-
-#get_ipython().run_line_magic('load_ext', 'autoreload')
-
-#get_ipython().run_line_magic('autoreload', '2')
-#get_ipython().run_line_magic('reload_ext', 'autoreload')
 
 
 
-
-# In[ ]:
-
-
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert createFolders.ipynb')
-#get_ipython().run_line_magic('nb_convert', '')
-
-
-
-
-# In[ ]:
 
 
 import builtins 
@@ -45,8 +27,6 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[ ]:
-
 
 try:
     from . import error_msgs
@@ -66,8 +46,6 @@ except ImportError:
 
 
 
-# In[ ]:
-
 
 import sys
 from pathlib import Path
@@ -84,8 +62,6 @@ import PySimpleGUI as sg
 
 
 
-
-# In[ ]:
 
 
 class multi_line_string():
@@ -123,8 +99,6 @@ class multi_line_string():
 
 
 
-# In[ ]:
-
 
 def wrap_print(t='', width=None, supress_print=False):
     '''print a text-wrapped string
@@ -139,9 +113,7 @@ def wrap_print(t='', width=None, supress_print=False):
         width = constants.TEXT_WIDTH
         
     wrapper = textwrap.TextWrapper(width=width, break_long_words=False, replace_whitespace=False)
-#     pdb.set_trace()
     result = '\n'.join([wrapper.fill(line) for line in t.splitlines()])
-#     pdb.set_trace()
 # this causes a runtime crash; it's unclear why, but is resolved by reassigning bprint = builtins.print 
 #     builtins.print(result)
     if not supress_print:
@@ -150,8 +122,6 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-
-# In[ ]:
 
 
 def parse_cmdargs():
@@ -180,8 +150,6 @@ def parse_cmdargs():
 
 
 
-# In[ ]:
-
 
 def read_config(files):
     '''parse .ini files 
@@ -198,8 +166,6 @@ def read_config(files):
 
 
 
-
-# In[ ]:
 
 
 def check_drive_path(drive_path=None):
@@ -259,8 +225,6 @@ def check_drive_path(drive_path=None):
 
 
 
-
-# In[ ]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -367,8 +331,6 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[ ]:
-
 
 def check_folders(directories, window=None):
     '''Verify that processed rows have synchronized over filestream
@@ -441,8 +403,6 @@ def check_folders(directories, window=None):
 
 
 
-
-# In[ ]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -557,8 +517,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
-
 
 # def window_drive_path():
 #     '''launch an interactive window to ask user to specify a google drive shared folder'''
@@ -579,8 +537,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
-
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
     sg.popup_scrolled(wrap_print(e, width, supress_print=True), size=(width+10, None),
@@ -591,8 +547,6 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-
-# In[ ]:
 
 
 def window_drive_path():
@@ -615,8 +569,6 @@ def window_drive_path():
 
 
 
-# In[ ]:
-
 
 def window_csv_file():
     '''launch an interactive window to ask user to specify a student export file'''
@@ -625,19 +577,22 @@ def window_csv_file():
                                  title='Select A Student Export',
                                  initial_folder=Path('~/Downloads').expanduser(),
                                  keep_on_top=True, font=constants.FONT, location=constants.POPUP_LOCATION)
-    
     if csv_file:
-        csv_file = Path(csv_file)
+        csv_file = Path(csv_file).expanduser().absolute()
     else: 
         csv_file = None
         logging.info('no student_export path selected')
+
+    # check that there is a valid value (not None/False)
+    if csv_file:
+        if not csv_file.is_file():
+            csv_file = False
+            logging.warning(f'{csv_file} does not exist')
         
     return csv_file
 
 
 
-
-# In[ ]:
 
 
 def print_help():
@@ -657,8 +612,6 @@ def print_help():
 
 
 
-
-# In[ ]:
 
 
 def main_program(interactive=False, window=None):
@@ -743,9 +696,13 @@ def main_program(interactive=False, window=None):
     if interactive:
         print('Select a student export file to process')
         csv_file = window_csv_file()
-        if not csv_file:
+        if csv_file is None:
             msg = 'Can not proceed without a student export file.'
             return do_exit(msg, 0)
+        if csv_file is False:
+            msg = 'File not found. Choose another file.'
+            return do_exit(msg, 0)
+        
     else:
         try:
             csv_file = Path(config['__cmd_line']['student_export'])
@@ -879,8 +836,6 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
-
 
 def main():
     '''launch the cli or gui version of the script '''
@@ -959,18 +914,8 @@ def main():
 
 
 
-# In[ ]:
-
 
 if __name__ == '__main__':
     main()
-
-
-
-
-# In[ ]:
-
-
-
 
 
