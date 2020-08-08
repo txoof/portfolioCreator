@@ -3,7 +3,7 @@ from pathlib import Path
 
 # basics #
 ##########
-version = '0.1.01-rc2'
+version = '0.1.02-development-20.08.08'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
 contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
