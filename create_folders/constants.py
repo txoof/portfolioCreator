@@ -3,7 +3,7 @@ from pathlib import Path
 
 # basics #
 ##########
-version = '1.00.00'
+version = '1.00.01'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
 contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
@@ -45,7 +45,8 @@ expected_headers ={'LastFirst': str,
                    'Student_Number': int}
 
 # student grade level directories to create:
-student_dirs = ['00-Preschool',
+student_dirs = ['Admissions',
+                '00-Preschool',
                 '00-Transition Kindergarten',
                 '01-Grade',
                 '02-Grade',
