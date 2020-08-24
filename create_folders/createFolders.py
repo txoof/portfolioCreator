@@ -28,6 +28,9 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
+# this helps resolve import errors depending on how the script is run
+# there is a difference how paths/relative paths are handled between 
+# pyinstaller executables and jupyter/command line
 try:
     from . import error_msgs
 except ImportError:
@@ -624,7 +627,7 @@ def main_program(interactive=False, window=None):
     logging.debug(f'python version: {sys.version}')
     
     # base configuration fle
-    config_file = Path(constants.config_file)
+    config_file = Path(constants.default_config_path)
     # user config file (~/.config/app_name/app.ini)
     user_config_path = Path(constants.user_config_path)
     
@@ -917,5 +920,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
 
 

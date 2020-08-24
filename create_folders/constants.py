@@ -3,7 +3,7 @@ from pathlib import Path
 
 # basics #
 ##########
-version = '1.00.01'
+version = '1.00.02'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
 contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
@@ -22,7 +22,10 @@ logging_config = _root_dir/'logging_cfg.ini'
 log_file = Path('~/'+app_name+'.log').expanduser().absolute()
 
 # base configuration
-config_file = '.'.join((app_name, 'ini'))
+#config_file = '.'.join((app_name, 'ini'))
+config_file = f'{app_name}.ini'
+# default configuration file
+default_config_path = _root_dir/config_file
 # user configuration
 config_dir = '.'.join((devel_name, app_name))
 user_config_path = Path('~/.config').expanduser()/config_dir/config_file
