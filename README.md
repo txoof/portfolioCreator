@@ -34,7 +34,7 @@ createFolders will **not create duplicate folders** for existing students and wi
 Locate any new students in PowerSchool and run a quick export. This query can be very helpful: `Grade_Level=X;DistrictEntryDate>=MM/DD/YYYY`
 
 #### Quick Export Fields
-When running a Quick Export the following fileds **must be included**. Any additional fields will be ignored. 
+When running a Quick Export the following fileds **must be included**. Any additional fields will be ignored. No other settings are required.
 ```
 LastFirst
 Student_Number
