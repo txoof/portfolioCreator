@@ -4,8 +4,8 @@ Create student cumulative folders on Google Drive using Google FileStream using 
 
 
 ## Quick Start
-This assumes you already have [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 
+0. [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
 2. Locate the file `createFolders.tgz` -- likely in your `Downloads` folder
 3. Double click on the file to decompress it
