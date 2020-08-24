@@ -1,4 +1,4 @@
 # createFolders
 
-## v0.1.00-rc1 29 July 2020
-first release candidate
+## v0.1.02
+* fix crash on empty or missing configuration file
