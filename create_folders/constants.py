@@ -25,6 +25,7 @@ log_file = Path('~/'+app_name+'.log').expanduser().absolute()
 config_file = '.'.join((app_name, 'ini'))
 # user configuration
 config_dir = '.'.join((devel_name, app_name))
+default_config_path = _root_dir/config_file
 user_config_path = Path('~/.config').expanduser()/config_dir/config_file
 
 
@@ -113,4 +114,4 @@ WIN_LOCATION = (80, 80)
 
 POPUP_LOCATION = (WIN_LOCATION[0], WIN_LOCATION[1]+(TEXT_ROWS*FONT_SIZE))
 
-HELP_FILE = './Help.md'
+HELP_FILE = _root_dir/'./Help.md'
