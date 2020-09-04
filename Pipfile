@@ -7,10 +7,11 @@ verify_ssl = true
 
 [packages]
 ipykernel = "*"
-argconfigparse = "*"
+#argconfigparse = "*"
 rich = "*"
 pysimplegui = "*"
 pyinstaller = "*"
+argconfigparse = {editable = true, git = "https://github.com/txoof/ArgConfigParse.git", ref = "master"}
 
 [requires]
 python_version = "3"
