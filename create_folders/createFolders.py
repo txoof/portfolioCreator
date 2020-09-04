@@ -1,10 +1,27 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # coding: utf-8
 
 
+# In[ ]:
+
+
+#get_ipython().run_line_magic('load_ext', 'autoreload')
+
+#get_ipython().run_line_magic('autoreload', '2')
+#get_ipython().run_line_magic('reload_ext', 'autoreload')
 
 
 
+
+# In[3]:
+
+
+#get_ipython().system(' ~/bin/develtools/nbconvert createFolders.ipynb')
+
+
+
+
+# In[ ]:
 
 
 import builtins 
@@ -27,7 +44,12 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
+# In[ ]:
 
+
+# this helps resolve import errors depending on how the script is run
+# there is a difference how paths/relative paths are handled between 
+# pyinstaller executables and jupyter/command line
 try:
     from . import error_msgs
 except ImportError:
@@ -46,6 +68,8 @@ except ImportError:
 
 
 
+# In[ ]:
+
 
 import sys
 from pathlib import Path
@@ -62,6 +86,8 @@ import PySimpleGUI as sg
 
 
 
+
+# In[ ]:
 
 
 class multi_line_string():
@@ -99,6 +125,8 @@ class multi_line_string():
 
 
 
+# In[ ]:
+
 
 def wrap_print(t='', width=None, supress_print=False):
     '''print a text-wrapped string
@@ -122,6 +150,8 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
+
+# In[ ]:
 
 
 def parse_cmdargs():
@@ -150,6 +180,8 @@ def parse_cmdargs():
 
 
 
+# In[ ]:
+
 
 def read_config(files):
     '''parse .ini files 
@@ -159,13 +191,17 @@ def read_config(files):
     
     Returns:
         `dict`: nested dict of configuration'''
+    logging.debug(f'parsing config files {files}')
     parser = ArgConfigParse.ConfigFile(config_files=files, ignore_missing=True)
     parser.parse_config()
+    logging.debug(f'config_dict: {parser.config_dict}')
     
     return parser.config_dict
 
 
 
+
+# In[ ]:
 
 
 def check_drive_path(drive_path=None):
@@ -225,6 +261,8 @@ def check_drive_path(drive_path=None):
 
 
 
+
+# In[ ]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -331,6 +369,8 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
+# In[ ]:
+
 
 def check_folders(directories, window=None):
     '''Verify that processed rows have synchronized over filestream
@@ -403,6 +443,8 @@ def check_folders(directories, window=None):
 
 
 
+
+# In[ ]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -517,6 +559,8 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
+# In[ ]:
+
 
 # def window_drive_path():
 #     '''launch an interactive window to ask user to specify a google drive shared folder'''
@@ -537,6 +581,8 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
+# In[ ]:
+
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
     sg.popup_scrolled(wrap_print(e, width, supress_print=True), size=(width+10, None),
@@ -547,6 +593,8 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
+
+# In[ ]:
 
 
 def window_drive_path():
@@ -568,6 +616,8 @@ def window_drive_path():
 
 
 
+
+# In[ ]:
 
 
 def window_csv_file():
@@ -594,6 +644,8 @@ def window_csv_file():
 
 
 
+# In[ ]:
+
 
 def print_help():
     
@@ -613,6 +665,8 @@ def print_help():
 
 
 
+# In[ ]:
+
 
 def main_program(interactive=False, window=None):
     # set the local logger
@@ -624,17 +678,20 @@ def main_program(interactive=False, window=None):
     logging.debug(f'python version: {sys.version}')
     
     # base configuration fle
-    config_file = Path(constants.config_file)
+#     default_config_file = Path(f'./{constants.default_config_file}')
+    default_config_path = constants.default_config_path
     # user config file (~/.config/app_name/app.ini)
     user_config_path = Path(constants.user_config_path)
     
     # if the user configuration file is missing set to True & create later at end
-    update_user_config = not(user_config_path.exists)
+    update_user_config = not(user_config_path.exists())
     logging.debug(f'user config will be created: {update_user_config}')
 
     # parse command line and config files - 
     cmd_args_dict = parse_cmdargs()
-    cfg_files_dict = read_config([constants.config_file, constants.user_config_path])
+    logging.debug(f'default cfg: {default_config_path}; user cfg: {user_config_path}')
+    
+    cfg_files_dict = read_config([default_config_path, user_config_path])
 
     # merge the command line arguments and the config files; cmd line overwrites files
     config = ArgConfigParse.merge_dict(cfg_files_dict, cmd_args_dict)    
@@ -836,6 +893,8 @@ def main_program(interactive=False, window=None):
 
 
 
+# In[ ]:
+
 
 def main():
     '''launch the cli or gui version of the script '''
@@ -914,8 +973,18 @@ def main():
 
 
 
+# In[ ]:
+
 
 if __name__ == '__main__':
     main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
