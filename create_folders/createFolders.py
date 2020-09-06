@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[5]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[4]:
+# In[6]:
 
 
 #get_ipython().system(' ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[ ]:
+# In[7]:
 
 
 import builtins 
@@ -44,7 +44,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[ ]:
+# In[8]:
 
 
 # this helps resolve import errors depending on how the script is run
@@ -68,7 +68,7 @@ except ImportError:
 
 
 
-# In[ ]:
+# In[9]:
 
 
 import sys
@@ -87,7 +87,7 @@ import PySimpleGUI as sg
 
 
 
-# In[ ]:
+# In[10]:
 
 
 class multi_line_string():
@@ -125,7 +125,7 @@ class multi_line_string():
 
 
 
-# In[ ]:
+# In[11]:
 
 
 def wrap_print(t='', width=None, supress_print=False):
@@ -151,7 +151,7 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-# In[ ]:
+# In[12]:
 
 
 def parse_cmdargs():
@@ -180,7 +180,7 @@ def parse_cmdargs():
 
 
 
-# In[ ]:
+# In[13]:
 
 
 def read_config(files):
@@ -201,7 +201,7 @@ def read_config(files):
 
 
 
-# In[ ]:
+# In[14]:
 
 
 def check_drive_path(drive_path=None):
@@ -262,7 +262,7 @@ def check_drive_path(drive_path=None):
 
 
 
-# In[ ]:
+# In[15]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -369,7 +369,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[ ]:
+# In[16]:
 
 
 def check_folders(directories, window=None):
@@ -444,7 +444,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[ ]:
+# In[17]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -559,7 +559,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
+# In[18]:
 
 
 # def window_drive_path():
@@ -581,7 +581,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[ ]:
+# In[19]:
 
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
@@ -594,7 +594,7 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-# In[ ]:
+# In[20]:
 
 
 def window_drive_path():
@@ -617,7 +617,7 @@ def window_drive_path():
 
 
 
-# In[ ]:
+# In[21]:
 
 
 def window_csv_file():
@@ -644,7 +644,7 @@ def window_csv_file():
 
 
 
-# In[ ]:
+# In[22]:
 
 
 def print_help():
@@ -665,7 +665,7 @@ def print_help():
 
 
 
-# In[ ]:
+# In[23]:
 
 
 def main_program(interactive=False, window=None):
@@ -893,7 +893,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[ ]:
+# In[24]:
 
 
 def main():
@@ -973,7 +973,7 @@ def main():
 
 
 
-# In[ ]:
+# In[25]:
 
 
 if __name__ == '__main__':
