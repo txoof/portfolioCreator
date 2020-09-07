@@ -354,7 +354,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
             logging.warning(f'{len(directory.matches)} existing directories found for {directory.LastFirst}; this is NOT OK')            
             logging.info('this directory will not be created')            
             directories['multiple'].append(directory) 
-        print(f'{(index+1)/total*100:.0f}% completed')
+        print(f'{(index+1)/total*100:.0f}% of students processed')
 
         if window:
             sg.one_line_progress_meter(title='Cumulative Folder Creation', 
@@ -818,13 +818,13 @@ def main_program(interactive=False, window=None):
     directories = create_folders(drive_path=drive_path, valid_rows=valid_rows, header_map=header_map, window=window)
     
     
-    print(f'Confirming that student folders were properly created in the cloud')
+    print(f'\nConfirming that student folders were properly created in the cloud')
     confirmed_dirs, unconfirmed_dirs = check_folders(directories, window=window)
     
     
 #     return directories, confirmed_dirs, unconfirmed_dirs    
     
-    print('Preparing records...')
+    print('Preparing files for PS Administrator and logging errors...')
     if interactive:
         window.Refresh()
     csv_files = write_csv(confirmed_dirs, unconfirmed_dirs, invalid_rows)
@@ -846,6 +846,8 @@ def main_program(interactive=False, window=None):
     s = multi_line_string()
     
     s.append('*****Summary*****')
+    s.append('PLEASE READ THIS ENITRE WINDOW')
+    s.append('Any errors or invalid rows **MUST** be dealt with.')
     s.append(f'Processed {len(csv_list)-1} student recods from "{csv_file}"')
     s.append(f'{len(valid_rows)} rows contained valid data and were processed')
     if len_confirmed > 0:
@@ -860,7 +862,8 @@ def main_program(interactive=False, window=None):
         t_str = csv_files["unconfirmed"]
         s.append('-'*10)
         s.append(f'{len_unconfirmed} rows could not be confirmed')
-        s.append(f'review the file below for more information on the failed rows:')
+        s.append(f'It is possible to "Process" the file below to run just the corrected records.')        
+        s.append(f'Review the file below for more information on the failed rows:')
         s.append(f'*************************\n')
         s.append(f'{t_str}')
         s.append(f'\n*************************')
@@ -870,7 +873,8 @@ def main_program(interactive=False, window=None):
         s.append(f'{len(invalid_rows)-1} rows contained invalid data and were skipped')
         s.append('please ONLY use student.export files produced by PowerSchool')
         t_str = csv_files["invalid"]
-        s.append(f'review the file below for more information on the invalid rows:')
+        s.append(f'Once the errors are corrected it is possible to "Process" the ERRORS file to run just the corrected records.')
+        s.append(f'Review the file below for more information on the invalid rows:')
         s.append(f'*************************\n')
         s.append(f'{t_str}')
         s.append(f'\n*************************')
