@@ -89,13 +89,13 @@ csv_error_headers.update({'error': '{val}', 'matches': '{val}'})
 
 # Strings ERROR output in CSV
 csv_error_strings = {'duplicate':
-                      'This Student_Number has an existing folder (see the "matches" column), but with a different LastFirst name. Correct the folder name using the webview_link.',
+                      'This Student_Number has an existing folder (see the "matches" column), but with a different LastFirst name. Correct the folder name using the URL in the "matches" colum. Once you have corrected the error, process **this** file.',
                      'multiple':
-                      'Multiple folders exist for this Student_Number. THIS IS NNOT OK. You MUST do the following: 1) choose one of the existing folders. 2) move the contents of the other folders into this folder. 3) Delete the unneeded folders. Use the links in the "matches" column to locate the existing folders',
+                      'Multiple folders exist for this Student_Number. THIS IS NNOT OK. You MUST do the following: 1) choose one of the existing folders. 2) move the contents of the other folders into this folder. 3) Delete the unneeded folders. Use the links in the "matches" column to locate the existing folders. Once you have corrected this error, process **this** file.',
                      'failed':
-                      f'This folder could not be created. Try again later. If the errors persist, check the log file: {log_file}',
+                      f'This folder could not be created. Try again later. If the errors persist, check the log file: {log_file}. Process **this** file when you try later.',
                      'other': 
-                      f'There was an unknown issue creating this folder. Try again later. If this error persists, check the log file: {log_file}',
+                      f'There was an unknown issue creating this folder. Try again later. If this error persists, check the log file: {log_file}. Process **this** file when you try later.',
                      'created': '',
                      'subdirs': '',
                      'exist': ''
