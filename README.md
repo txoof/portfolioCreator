@@ -4,6 +4,8 @@ Create student cumulative folders on Google Drive using Google FileStream using 
 
 
 ## Quick Start
+**IMPORTANT if you have never run the application see the [First Run Instructions](#FirstRun) below!##
+
 This assumes you already have [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 
 1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
@@ -49,6 +51,8 @@ createFolders has only four options when run in graphical mode:
 * Exit
 
 #### Process File
+<a name="ProcessFile"></a>
+
 Select a student.export file and create student folders as needed. The student.export file must be in a delimited format such as a tsv or csv with the folowing column headers: `LastFirst, Student_Number, ClassOf`. These fields can be in any order. Additional fields will be ignored.
 
 Data rows must follow the following data types:
@@ -58,8 +62,15 @@ Data rows must follow the following data types:
 
 Data rows that do not conform will be ignored and recorded in `~/Desktop/createFolders` as a csv file.
 
+Once the opporation is completed, a summary of the completed procedures will open. **READ** all of the summary. There may be some students that could not be processed. 
+
+Share the Links TXT file with the PS Administrator so PowerSchool links can be updated.
+
+A full report is stored in a folder on your Desktop called *createFolders*. Be sure to review the any ERROR files and correct the errors! **YOU MUST** run the application again to create forlders for the students with errors. It is possible to simply process the Error file by selecting it. You may also run the same student export again; duplicate folders will ***not*** be created.
+
 #### Change Shared Drive
-Choose the shared drive **and folder** where cumulative folders are stored. This is the location where all cumulative folders are stored. createFolders preforms several checks to ensure you have chosen the appropriate drive.
+Choose the shared drive **and folder** where cumulative folders are stored. This is the location where all cumulative folders are stored. createFolders preforms several checks to ensure you have chosen the appropriate drive. For more help see the help section: [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive)
+![choose the Google Shared Drive and Cumulative folder](./documentation/choose_gdrive.png)
 
 createFolders looks for a specific file called `sentryFile_DO_NOT_REMOVE.txt` in the `Student Cumulative Folders (AKA Student Portfolios)` folder. If this file is missing, createFolders will not proceed. See below for more information in remedying this problem.
 
@@ -118,6 +129,7 @@ This error indicates that the program was not created by an "official" developer
     * If you download a new version of the application, you *may* need to repeat these steps
     
 ### Choosing the Shared Drive and Cumulative Student Folder
+<a name="ChooseSharedDrive"></a>
 ![choose the Google Shared Drive and Cumulative folder](./documentation/choose_gdrive.png)
 
 createFolders needs to know both which Google Shared Drive to use and the folder where Student Cumulative Folders are stored. The first time you run createFolders, it will ask you to choose the appropriate drive and folder.
@@ -153,7 +165,24 @@ To completely uninstall the application do the following:
 1. Remove the executable `createFolders` application
 2. From the terminal run `$ rm -rf ~/.config/com.txoof.createFolders`
 
+# FirstRun
 
+The first time you run the Portfolio Creator application you will need to take some special steps:
+1. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
+2. Locate and unpack the applicaton in your Downloads folder
+   * Double click to unzip
+   * Move into your Applications folder
+   * Right click on the createFolders application icon and choose *"Open"*
+3. Click *"Process File"* to get started
+   * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
+   * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
+   * Within the *ASH Student Cumulative Folders* drive locate the folder that contains the folder *Student Cumulative Folders (AKA Student Portfolios)* and click *"Choose"* then click *"Ok"* to accept the drive and folder. 
+   * If there are any problems, the applicaiton will warn you and stop you from proceeding
+   * See [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive) for screenshots and more information
+4. Create an export from powerschool 
+   * See: [Create a Student Export](ProcessFile)
+5. Click *"Process File"* to process a student export
+6. Review
 
 ```python
 %alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
