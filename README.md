@@ -66,7 +66,8 @@ Once the opporation is completed, a summary of the completed procedures will ope
 
 Share the Links TXT file with the PS Administrator so PowerSchool links can be updated.
 
-A full report is stored in a folder on your Desktop called *createFolders*. Be sure to review the any ERROR files and correct the errors! **YOU MUST** run the application again to create forlders for the students with errors. It is possible to simply process the Error file by selecting it. You may also run the same student export again; duplicate folders will ***not*** be created.
+A report of any Errors and files that must be sent to the PS Administator is stored in a folder on your Desktop called *createFolders*. **READ** the entire window. Be sure to review the any ERROR files and correct the errors! **YOU MUST** run the application again to create forlders for the students with errors. It is possible to simply process the Error file by selecting it. You may also run the same student export again; duplicate folders will ***not*** be created.
+![Summary window](./documentation/summary.png)
 
 #### Change Shared Drive
 Choose the shared drive **and folder** where cumulative folders are stored. This is the location where all cumulative folders are stored. createFolders preforms several checks to ensure you have chosen the appropriate drive. For more help see the help section: [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive)
