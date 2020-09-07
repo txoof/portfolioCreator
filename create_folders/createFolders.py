@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[5]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[6]:
+# In[2]:
 
 
 #get_ipython().system(' ~/bin/develtools/nbconvert createFolders.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[7]:
+# In[3]:
 
 
 import builtins 
@@ -44,7 +44,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[8]:
+# In[4]:
 
 
 # this helps resolve import errors depending on how the script is run
@@ -68,7 +68,7 @@ except ImportError:
 
 
 
-# In[9]:
+# In[5]:
 
 
 import sys
@@ -87,7 +87,7 @@ import PySimpleGUI as sg
 
 
 
-# In[10]:
+# In[6]:
 
 
 class multi_line_string():
@@ -125,7 +125,7 @@ class multi_line_string():
 
 
 
-# In[11]:
+# In[7]:
 
 
 def wrap_print(t='', width=None, supress_print=False):
@@ -151,7 +151,7 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-# In[12]:
+# In[8]:
 
 
 def parse_cmdargs():
@@ -180,7 +180,7 @@ def parse_cmdargs():
 
 
 
-# In[13]:
+# In[9]:
 
 
 def read_config(files):
@@ -201,7 +201,7 @@ def read_config(files):
 
 
 
-# In[14]:
+# In[10]:
 
 
 def check_drive_path(drive_path=None):
@@ -262,7 +262,7 @@ def check_drive_path(drive_path=None):
 
 
 
-# In[15]:
+# In[11]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -369,7 +369,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[16]:
+# In[12]:
 
 
 def check_folders(directories, window=None):
@@ -444,7 +444,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[17]:
+# In[13]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -559,7 +559,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[18]:
+# In[14]:
 
 
 # def window_drive_path():
@@ -581,7 +581,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[19]:
+# In[15]:
 
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
@@ -594,7 +594,7 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-# In[20]:
+# In[16]:
 
 
 def window_drive_path():
@@ -617,7 +617,7 @@ def window_drive_path():
 
 
 
-# In[21]:
+# In[17]:
 
 
 def window_csv_file():
@@ -644,7 +644,7 @@ def window_csv_file():
 
 
 
-# In[22]:
+# In[18]:
 
 
 def print_help():
@@ -665,7 +665,7 @@ def print_help():
 
 
 
-# In[23]:
+# In[19]:
 
 
 def main_program(interactive=False, window=None):
@@ -883,7 +883,7 @@ def main_program(interactive=False, window=None):
     
     if interactive:
 #         sg.popup(s, title='Summary', font=constants.FONT, keep_on_top=True)
-        sg.popup_scrolled(s, title='Summary', font=constants.FONT, size=(constants.TEXT_WIDTH*2, None))
+        sg.popup_scrolled(s, title='Summary', font=constants.FONT, size=(constants.TEXT_WIDTH*2, 35))
     
 
     logging.debug('done')
@@ -893,7 +893,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[24]:
+# In[20]:
 
 
 def main():
@@ -973,7 +973,7 @@ def main():
 
 
 
-# In[25]:
+# In[ ]:
 
 
 if __name__ == '__main__':
