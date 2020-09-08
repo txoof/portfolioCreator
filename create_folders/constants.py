@@ -3,7 +3,7 @@ from pathlib import Path
 
 # basics #
 ##########
-version = '1.00.04-20.09.07-devel'
+version = '1.00.05-20.09.08-devel'
 app_name = 'createFolders'
 devel_name = 'com.txoof'
 contact = 'Aaron Ciuffo -- aaron.ciuffo@gmail.com'
@@ -70,7 +70,7 @@ date_format = "%Y-%m-%d_%H.%M"
 # default output path
 csv_output_path = Path('~/Desktop/').expanduser()/app_name
 # PowerSchool Admin Import CSV filename
-csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.csv'
+csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.txt'
 
 # CSV output dictionary - property name, format string for csv
 csv_output_headers = {'LastFirst': '{val}',
