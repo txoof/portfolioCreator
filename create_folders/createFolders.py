@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -21,7 +21,7 @@
 
 
 
-# In[3]:
+# In[2]:
 
 
 import builtins 
@@ -45,7 +45,7 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[4]:
+# In[3]:
 
 
 # this helps resolve import errors depending on how the script is run
@@ -69,7 +69,7 @@ except ImportError:
 
 
 
-# In[5]:
+# In[4]:
 
 
 import sys
@@ -88,7 +88,7 @@ import PySimpleGUI as sg
 
 
 
-# In[6]:
+# In[5]:
 
 
 class multi_line_string():
@@ -126,7 +126,7 @@ class multi_line_string():
 
 
 
-# In[7]:
+# In[6]:
 
 
 def wrap_print(t='', width=None, supress_print=False):
@@ -152,7 +152,7 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-# In[8]:
+# In[7]:
 
 
 def parse_cmdargs():
@@ -181,7 +181,7 @@ def parse_cmdargs():
 
 
 
-# In[9]:
+# In[8]:
 
 
 def read_config(files):
@@ -202,7 +202,7 @@ def read_config(files):
 
 
 
-# In[10]:
+# In[9]:
 
 
 def check_drive_path(drive_path=None):
@@ -263,7 +263,7 @@ def check_drive_path(drive_path=None):
 
 
 
-# In[24]:
+# In[10]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -370,7 +370,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[12]:
+# In[11]:
 
 
 def check_folders(directories, window=None):
@@ -445,7 +445,7 @@ def check_folders(directories, window=None):
 
 
 
-# In[13]:
+# In[12]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -503,7 +503,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
             row.append(formatted_string)
         csv_output_list.append(row)
     try:
-        csv_writer(csv_output_list, csv_output_path/confirmed_file)
+        csv_writer(csv_output_list, csv_output_path/confirmed_file, dialect='excel_tab')
     except Exception as e:
         logging.warning(f'{e}')    
         
@@ -531,7 +531,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
                     row.append(formatted_string)
                 csv_error_list.append(row)
         else:
-            # handle rows that are do not have a key
+            # handle rows that  do not have a key
             logging.warning(f'unknown set type in unconfirmed set: {each_set}')   
     if len(csv_error_list) > 1:
         logging.info('writing unconfirmed dirs csv')
@@ -560,7 +560,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[14]:
+# In[13]:
 
 
 # def window_drive_path():
@@ -582,7 +582,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[15]:
+# In[14]:
 
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
@@ -595,7 +595,7 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-# In[16]:
+# In[15]:
 
 
 def window_drive_path():
@@ -618,7 +618,7 @@ def window_drive_path():
 
 
 
-# In[17]:
+# In[16]:
 
 
 def window_csv_file():
@@ -645,7 +645,7 @@ def window_csv_file():
 
 
 
-# In[18]:
+# In[17]:
 
 
 def print_help():
@@ -666,7 +666,7 @@ def print_help():
 
 
 
-# In[23]:
+# In[18]:
 
 
 def main_program(interactive=False, window=None):
@@ -898,7 +898,7 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[20]:
+# In[19]:
 
 
 def main():
@@ -978,11 +978,19 @@ def main():
 
 
 
-# In[21]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
 
