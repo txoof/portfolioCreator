@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
@@ -10,7 +10,7 @@
 
 
 
-# In[29]:
+# In[37]:
 
 
 #get_ipython().run_line_magic('nb_convert', '')
@@ -18,7 +18,7 @@
 
 
 
-# In[12]:
+# In[3]:
 
 
 import logging
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[13]:
+# In[4]:
 
 
 import sys
@@ -38,7 +38,7 @@ from pathlib import Path
 
 
 
-# In[22]:
+# In[5]:
 
 
 def do_exit(e='unknown error in unknown module!', exit_status=99):
@@ -84,7 +84,7 @@ def do_exit(e='unknown error in unknown module!', exit_status=99):
 
 
 
-# In[ ]:
+# In[6]:
 
 
 def csv_to_list(file):
@@ -110,7 +110,7 @@ def csv_to_list(file):
 
 
 
-# In[ ]:
+# In[7]:
 
 
 def map_headers(csv_list, expected_headers=[]):
@@ -137,7 +137,7 @@ def map_headers(csv_list, expected_headers=[]):
 
 
 
-# In[ ]:
+# In[8]:
 
 
 def validate_data(csv_list, expected_headers, header_map):
@@ -179,7 +179,7 @@ def validate_data(csv_list, expected_headers, header_map):
 
 
 
-# In[ ]:
+# In[9]:
 
 
 def adjust_handler(handler=None, new_level=None):
@@ -213,18 +213,29 @@ def adjust_handler(handler=None, new_level=None):
 
 
 
-# In[ ]:
+# In[64]:
 
 
-def csv_writer(rows_list, path):
+def csv_writer(rows_list, path, dialect=None):
     '''write a list to csv with minimal quoting 
     
     Args:
         rows_list(`list`): list of lists to convert to csv
-        path(`str` or `Path`): path to output file'''
+        path(`str` or `Path`): path to output file
+        dialect(`csv.Dialect` or `str`): csv.Dialect object or string of known CSV dialect
+            such as excel, excel_tab, unix_dialect'''
+#     if dialect:
+#         use_dialect = getattr(csv, dialect)
+#     else:
+#         use_dialect = None
+    if isinstance(dialect, type):
+        use_dialect = dialect
+    else:
+        use_dialect = getattr(csv, dialect)
+
     logging.debug(f'writing csv file: {path}')
     with open(path, 'w', newline='') as file:
-        writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        writer = csv.writer(file, dialect=use_dialect, quoting=csv.QUOTE_MINIMAL)
         for each in rows_list:
             writer.writerow(each)
 
