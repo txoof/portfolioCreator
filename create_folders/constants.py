@@ -70,7 +70,7 @@ date_format = "%Y-%m-%d_%H.%M"
 # default output path
 csv_output_path = Path('~/Desktop/').expanduser()/app_name
 # PowerSchool Admin Import CSV filename
-csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.txt'
+csv_output_name = '{date}_Portfolio_Links_for_PowerSchool.text'
 
 # CSV output dictionary - property name, format string for csv
 csv_output_headers = {'LastFirst': '{val}',
