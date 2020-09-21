@@ -27,8 +27,9 @@ This assumes you already have [Google FileStream](https://dl.google.com/drive-fi
 ## Instructions
 createFolders depends on a working instance of [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and signed in with an account that can write to the Student Cumulative Folders shared drive. See the [Help](#Help) section for assistance in setting up FileStream.
 
-### Prepare a student.export.text file
 <a name="prepareExport"> </a>
+### Prepare a student.export.text file
+
 createFolders reads data from PowerSchool exports to create folders in Google Drive and prepare links for the demographics page. This section details the preparation of a student.export.text file that can be used with createFolders.
 
 createFolders will **not create duplicate folders** for existing students and will not create folders when a duplicate student number is found. This means that you can run the same batch of students several times without harm. If a folder already exists, it will simply be checked for consistency and further ignored.
@@ -51,8 +52,8 @@ createFolders has only four options when run in graphical mode:
 * Help
 * Exit
 
-#### Process File
 <a name="ProcessFile"></a>
+#### Process File
 
 Select a student.export file and create student folders as needed. The student.export file must be in a delimited format such as a tsv or csv with the folowing column headers: `LastFirst, Student_Number, ClassOf`. These fields can be in any order. Additional fields will be ignored.
 
@@ -130,8 +131,8 @@ This error indicates that the program was not created by an "official" developer
 4. Read the text and choose "Open" -- *this will permenently allow you to open this application by double clicking on the icon*
     * If you download a new version of the application, you *may* need to repeat these steps
     
-### Choosing the Shared Drive and Cumulative Student Folder
 <a name="ChooseSharedDrive"></a>
+### Choosing the Shared Drive and Cumulative Student Folder
 ![choose the Google Shared Drive and Cumulative folder](./documentation/choose_gdrive.png)
 
 createFolders needs to know both which Google Shared Drive to use and the folder where Student Cumulative Folders are stored. The first time you run createFolders, it will ask you to choose the appropriate drive and folder.
@@ -149,8 +150,8 @@ createFolders needs to know both which Google Shared Drive to use and the folder
     * You can always change this folder later if you have made a mistake
 7. Click "Process File" to begin processing a student.export file
 
-### Setup Google FileStream
 <a name="filestream"></a>
+### Setup Google FileStream
 Google FileStream is required for createFolders. The user must be signed in with an account that has write permissions to the Student Cumulative folders drive.
 
 1. Download [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) and run the installer.
