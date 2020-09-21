@@ -152,7 +152,7 @@ createFolders needs to know both which Google Shared Drive to use and the folder
 
 <a name="filestream"></a>
 ### Setup Google FileStream
-Google FileStream is required for createFolders. The user must be signed in with an account that has write permissions to the Student Cumulative folders drive.
+Google FileStream is required for createFolders. The user must be signed in with an account that has write permissions to the Student Cumulative folders drive. As of September 2020, users must have the *Manager* attribute on a Google Shared Drive to create folders in Google Filestream.
 
 1. Download [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) and run the installer.
 2. Launch Google FileStream if it is not running (look for the icon in the menu bar) and click "Sign in"
@@ -172,22 +172,23 @@ To completely uninstall the application do the following:
 # FirstRun
 
 The first time you run the Portfolio Creator application you will need to take some special steps:
-0. Make sure [Google FileStream{(#filestream) installed.
-1. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
-2. Locate and unpack the applicaton in your Downloads folder
+
+1. Make sure [Google FileStream{(#filestream) installed and you are signed in!
+2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
+3. Locate and unpack the applicaton in your Downloads folder
    * Double click to unzip
    * Move into your Applications folder
    * Right click on the createFolders application icon and choose *"Open"*
-3. Click *"Process File"* to get started
+4. Click *"Process File"* to get started
    * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
    * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
    * Within the *ASH Student Cumulative Folders* drive locate the folder that contains the folder *Student Cumulative Folders (AKA Student Portfolios)* and click *"Choose"* then click *"Ok"* to accept the drive and folder. 
    * If there are any problems, the applicaiton will warn you and stop you from proceeding
    * See [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive) for screenshots and more information
-4. Create an export from powerschool 
+5. Create an export from powerschool 
    * See: [Create a Student Export](#prepareExport)
-5. Click *"Process File"* to process a student export
-6. Review
+6. Click *"Process File"* to process a student export
+7. Review the processed files and correct any errors
 
 ```python
 %alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
