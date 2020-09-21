@@ -28,6 +28,7 @@ This assumes you already have [Google FileStream](https://dl.google.com/drive-fi
 createFolders depends on a working instance of [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and signed in with an account that can write to the Student Cumulative Folders shared drive. See the [Help](#Help) section for assistance in setting up FileStream.
 
 ### Prepare a student.export.text file
+<a name="prepareExport"> </a>
 createFolders reads data from PowerSchool exports to create folders in Google Drive and prepare links for the demographics page. This section details the preparation of a student.export.text file that can be used with createFolders.
 
 createFolders will **not create duplicate folders** for existing students and will not create folders when a duplicate student number is found. This means that you can run the same batch of students several times without harm. If a folder already exists, it will simply be checked for consistency and further ignored.
@@ -183,7 +184,7 @@ The first time you run the Portfolio Creator application you will need to take s
    * If there are any problems, the applicaiton will warn you and stop you from proceeding
    * See [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive) for screenshots and more information
 4. Create an export from powerschool 
-   * See: [Create a Student Export](ProcessFile)
+   * See: [Create a Student Export](prepareExport)
 5. Click *"Process File"* to process a student export
 6. Review
 
