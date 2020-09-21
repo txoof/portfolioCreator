@@ -149,6 +149,7 @@ createFolders needs to know both which Google Shared Drive to use and the folder
 7. Click "Process File" to begin processing a student.export file
 
 ### Setup Google FileStream
+<a name="filestream"></a>
 Google FileStream is required for createFolders. The user must be signed in with an account that has write permissions to the Student Cumulative folders drive.
 
 1. Download [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) and run the installer.
@@ -169,6 +170,7 @@ To completely uninstall the application do the following:
 # FirstRun
 
 The first time you run the Portfolio Creator application you will need to take some special steps:
+0. Make sure [Google FileStream{(#filestream) installed.
 1. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
 2. Locate and unpack the applicaton in your Downloads folder
    * Double click to unzip
