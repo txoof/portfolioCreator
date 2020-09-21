@@ -1,27 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[1]:
-
-
-#get_ipython().run_line_magic('load_ext', 'autoreload')
-
-#get_ipython().run_line_magic('autoreload', '2')
-#get_ipython().run_line_magic('reload_ext', 'autoreload')
 
 
 
-
-# In[ ]:
-
-
-#get_ipython().system(' ~/bin/develtools/nbconvert createFolders.ipynb')
-
-
-
-
-# In[2]:
 
 
 import builtins 
@@ -45,8 +28,6 @@ logging.config.fileConfig(constants.logging_config, defaults={'logfile': constan
 
 
 
-# In[3]:
-
 
 # this helps resolve import errors depending on how the script is run
 # there is a difference how paths/relative paths are handled between 
@@ -69,8 +50,6 @@ except ImportError:
 
 
 
-# In[4]:
-
 
 import sys
 from pathlib import Path
@@ -87,8 +66,6 @@ import PySimpleGUI as sg
 
 
 
-
-# In[5]:
 
 
 class multi_line_string():
@@ -126,8 +103,6 @@ class multi_line_string():
 
 
 
-# In[6]:
-
 
 def wrap_print(t='', width=None, supress_print=False):
     '''print a text-wrapped string
@@ -151,8 +126,6 @@ def wrap_print(t='', width=None, supress_print=False):
 
 
 
-
-# In[7]:
 
 
 def parse_cmdargs():
@@ -181,8 +154,6 @@ def parse_cmdargs():
 
 
 
-# In[8]:
-
 
 def read_config(files):
     '''parse .ini files 
@@ -201,8 +172,6 @@ def read_config(files):
 
 
 
-
-# In[9]:
 
 
 def check_drive_path(drive_path=None):
@@ -262,8 +231,6 @@ def check_drive_path(drive_path=None):
 
 
 
-
-# In[10]:
 
 
 def create_folders(drive_path, valid_rows, header_map, window=None):
@@ -370,8 +337,6 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 
-# In[11]:
-
 
 def check_folders(directories, window=None):
     '''Verify that processed rows have synchronized over filestream
@@ -444,8 +409,6 @@ def check_folders(directories, window=None):
 
 
 
-
-# In[12]:
 
 
 def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
@@ -560,8 +523,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[13]:
-
 
 # def window_drive_path():
 #     '''launch an interactive window to ask user to specify a google drive shared folder'''
@@ -582,8 +543,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
 
 
-# In[14]:
-
 
 def window_attention(e, title=None, width=constants.TEXT_WIDTH):
     sg.popup_scrolled(wrap_print(e, width, supress_print=True), size=(width+10, None),
@@ -594,8 +553,6 @@ def window_attention(e, title=None, width=constants.TEXT_WIDTH):
 
 
 
-
-# In[15]:
 
 
 def window_drive_path():
@@ -617,8 +574,6 @@ def window_drive_path():
 
 
 
-
-# In[16]:
 
 
 def window_csv_file():
@@ -645,8 +600,6 @@ def window_csv_file():
 
 
 
-# In[17]:
-
 
 def print_help():
     
@@ -665,8 +618,6 @@ def print_help():
 
 
 
-
-# In[18]:
 
 
 def main_program(interactive=False, window=None):
@@ -898,8 +849,6 @@ def main_program(interactive=False, window=None):
 
 
 
-# In[19]:
-
 
 def main():
     '''launch the cli or gui version of the script '''
@@ -978,8 +927,6 @@ def main():
 
 
 
-# In[ ]:
-
 
 if __name__ == '__main__':
     main()
@@ -987,15 +934,11 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
 
 
 
 
 
-
-
-# In[ ]:
 
 
 

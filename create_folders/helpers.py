@@ -1,24 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[1]:
-
-
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert helpers.ipynb')
 
 
 
-
-# In[37]:
-
-
-#get_ipython().run_line_magic('nb_convert', '')
-
-
-
-
-# In[3]:
 
 
 import logging
@@ -26,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 
-
-# In[4]:
 
 
 import sys
@@ -37,8 +21,6 @@ from pathlib import Path
 
 
 
-
-# In[5]:
 
 
 def do_exit(e='unknown error in unknown module!', exit_status=99):
@@ -84,8 +66,6 @@ def do_exit(e='unknown error in unknown module!', exit_status=99):
 
 
 
-# In[6]:
-
 
 def csv_to_list(file):
     '''read csv file `file` into a list
@@ -109,8 +89,6 @@ def csv_to_list(file):
 
 
 
-
-# In[7]:
 
 
 def map_headers(csv_list, expected_headers=[]):
@@ -136,8 +114,6 @@ def map_headers(csv_list, expected_headers=[]):
 
 
 
-
-# In[8]:
 
 
 def validate_data(csv_list, expected_headers, header_map):
@@ -179,8 +155,6 @@ def validate_data(csv_list, expected_headers, header_map):
 
 
 
-# In[9]:
-
 
 def adjust_handler(handler=None, new_level=None):
     '''adjust a logging handler
@@ -213,8 +187,6 @@ def adjust_handler(handler=None, new_level=None):
 
 
 
-# In[64]:
-
 
 def csv_writer(rows_list, path, dialect=None):
     '''write a list to csv with minimal quoting 
@@ -241,8 +213,6 @@ def csv_writer(rows_list, path, dialect=None):
 
 
 
-
-# In[ ]:
 
 
 def len_of_dict(my_set):
