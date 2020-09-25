@@ -455,6 +455,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
     logging.info('processing confirmed directories')
     # add the headers to the list
     csv_output_list.append(list(csv_output_headers.keys()))
+
     for each_dir in confirmed_dirs:
         row = []
         for column in csv_output_headers:
@@ -477,7 +478,7 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
 
     # add the headers to the output file
     csv_error_list.append(list(csv_error_headers.keys()))
-
+    
     for each_set in unconfirmed:
         if each_set in csv_error_strings:
             logging.debug(f'processing unconfirmed set: {each_set}')
@@ -843,7 +844,6 @@ def main_program(interactive=False, window=None):
     
 
     logging.debug('done')
-    
     return do_exit('Done - Ready to process another file', 0)
 
 
@@ -930,12 +930,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
 
 
 

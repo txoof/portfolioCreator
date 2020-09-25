@@ -5,8 +5,6 @@
 
 
 
-
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -203,7 +201,10 @@ def csv_writer(rows_list, path, dialect=None):
     if isinstance(dialect, type):
         use_dialect = dialect
     else:
-        use_dialect = getattr(csv, dialect)
+        try:
+            use_dialect = getattr(csv, dialect)
+        except (TypeError, AttributeError):
+            use_dialect=None
 
     logging.debug(f'writing csv file: {path}')
     with open(path, 'w', newline='') as file:

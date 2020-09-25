@@ -1,24 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[1]:
-
-
-#get_ipython().run_line_magic('alias', 'nb_convert ~/bin/develtools/nbconvert filestream.ipynb')
 
 
 
-
-# In[8]:
-
-
-#get_ipython().run_line_magic('nb_convert', '')
-
-
-
-
-# In[ ]:
 
 
 import logging
@@ -27,11 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[4]:
-
 
 # import class_constants
-from . import class_constants
+try:
+    from . import class_constants
+except ImportError:
+    import class_constants
 from pathlib import Path
 import subprocess
 import os
@@ -39,8 +26,6 @@ import glob
 
 
 
-
-# In[ ]:
 
 
 class GoogleDrivePath():
@@ -118,7 +103,7 @@ class GoogleDrivePath():
         try:
             file_id = self.get_xattr('user.drive.id')
         except FileNotFoundError as e:
-            logging.info(f'\'{self.path}\' does not appear to exist; cannot get attributes')
+            logging.info(f'\'{self.path}\' does not appear to exist in google drive; cannot get attributes')
             file_id = None
         return file_id                
 
@@ -293,8 +278,6 @@ class GoogleDrivePath():
 
 
 
-
-# In[ ]:
 
 
 class GDStudentPath(GoogleDrivePath):
@@ -491,8 +474,6 @@ class GDStudentPath(GoogleDrivePath):
 
 
 
-# In[ ]:
-
 
 def main():
     my_drive = GoogleDrivePath('/Volumes/GoogleDrive/My Drive')
@@ -513,8 +494,6 @@ if __name__ == '__main__':
 
 
 
-
-# In[ ]:
 
 
 
