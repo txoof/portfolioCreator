@@ -479,7 +479,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
     # add the headers to the output file
     csv_error_list.append(list(csv_error_headers.keys()))
     
-    set_trace()
     for each_set in unconfirmed:
         if each_set in csv_error_strings:
             logging.debug(f'processing unconfirmed set: {each_set}')
@@ -521,26 +520,6 @@ def write_csv(confirmed, unconfirmed, invalid_list, csv_output_path=None):
             'invalid': csv_output_path/invalid_file}
     
     
-
-
-
-
-
-from IPython.core.debugger import set_trace
-
-
-
-
-
-write_csv(cd, ud, ir,  '~/Desktop/createFolders/')
-
-
-
-
-
-cd = q[0]
-ud = q[1]
-ir = q[2]
 
 
 
@@ -865,27 +844,7 @@ def main_program(interactive=False, window=None):
     
 
     logging.debug('done')
-    return (confirmed_dirs, unconfirmed_dirs, invalid_rows)
     return do_exit('Done - Ready to process another file', 0)
-
-
-
-
-
-sys.argv.append('-s')
-sys.argv.append('./data/duplicate and OK.text')
-
-
-
-
-
-q = main_program()
-
-
-
-
-
-q[2]
 
 
 
@@ -971,12 +930,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
 
 
 
