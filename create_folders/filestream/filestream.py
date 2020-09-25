@@ -103,7 +103,7 @@ class GoogleDrivePath():
         try:
             file_id = self.get_xattr('user.drive.id')
         except FileNotFoundError as e:
-            logging.info(f'\'{self.path}\' does not appear to exist; cannot get attributes')
+            logging.info(f'\'{self.path}\' does not appear to exist in google drive; cannot get attributes')
             file_id = None
         return file_id                
 
@@ -308,7 +308,6 @@ class GDStudentPath(GoogleDrivePath):
         self.ClassOf = ClassOf
         self.LastFirst = LastFirst
         self.Student_Number = Student_Number
-        self.error = None
         
         
     def __repr__(self):
