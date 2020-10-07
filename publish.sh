@@ -14,9 +14,6 @@ if [ -z "$1" ]; then
   exit 0
 fi
 
-# run the build script
-#./build.sh
-
 tag="v$version_number"
 
 git tag -a "$tag" -m "$1"
