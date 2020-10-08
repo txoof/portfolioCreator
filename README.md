@@ -169,11 +169,12 @@ To completely uninstall the application do the following:
 1. Remove the executable `createFolders` application
 2. From the terminal run `$ rm -rf ~/.config/com.txoof.createFolders`
 
+<a name="FirstRun"></a>
 # FirstRun
 
 The first time you run the Portfolio Creator application you will need to take some special steps:
 
-1. Make sure [Google FileStream{(#filestream) installed and you are signed in!
+1. Make sure [Google FileStream](#filestream) installed and you are signed in!
 2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
 3. Locate and unpack the applicaton in your Downloads folder
    * Double click to unzip
