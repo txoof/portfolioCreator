@@ -170,7 +170,7 @@ To completely uninstall the application do the following:
 2. From the terminal run `$ rm -rf ~/.config/com.txoof.createFolders`
 
 <a name="FirstRun"></a>
-# FirstRun
+## FirstRun
 
 The first time you run the Portfolio Creator application you will need to take some special steps:
 
@@ -191,13 +191,12 @@ The first time you run the Portfolio Creator application you will need to take s
 6. Click *"Process File"* to process a student export
 7. Review the processed files and correct any errors
 
+
 ```python
-%alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
-%mdc
+# !alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
+!jupyter-nbconvert --to markdown README.ipynb
+
 ```
-
-    [NbConvertApp] Converting notebook README.ipynb to markdown
-
 
 
 ```python
