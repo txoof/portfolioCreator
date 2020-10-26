@@ -121,6 +121,7 @@ optional arguments:
 
 ## Help
 ### "createFolders" Cannot Be Opened
+<a name="CannotBeOpened"></a>
 ![unidentified developer window](./documentation/unidentified_devel.png)
 
 This error indicates that the program was not created by an "official" developer. In this case, this is not a problem. Take the following steps to run the program:
@@ -180,6 +181,7 @@ The first time you run the Portfolio Creator application you will need to take s
    * Double click to unzip
    * Move into your Applications folder
    * Right click on the createFolders application icon and choose *"Open"*
+      - You may see the message [*'MacOS cannot verify the developer of "createFolders"...'*](#CannotBeOpened); in this case read the text and choose *"Open"*
 4. Click *"Process File"* to get started
    * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
    * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
