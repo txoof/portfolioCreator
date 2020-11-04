@@ -121,6 +121,7 @@ optional arguments:
 
 ## Help
 ### "createFolders" Cannot Be Opened
+<a name="CannotBeOpened"></a>
 ![unidentified developer window](./documentation/unidentified_devel.png)
 
 This error indicates that the program was not created by an "official" developer. In this case, this is not a problem. Take the following steps to run the program:
@@ -169,16 +170,18 @@ To completely uninstall the application do the following:
 1. Remove the executable `createFolders` application
 2. From the terminal run `$ rm -rf ~/.config/com.txoof.createFolders`
 
-# FirstRun
+<a name="FirstRun"></a>
+## FirstRun
 
 The first time you run the Portfolio Creator application you will need to take some special steps:
 
-1. Make sure [Google FileStream{(#filestream) installed and you are signed in!
+1. Make sure [Google FileStream](#filestream) installed and you are signed in!
 2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
 3. Locate and unpack the applicaton in your Downloads folder
    * Double click to unzip
    * Move into your Applications folder
    * Right click on the createFolders application icon and choose *"Open"*
+      - You may see the message [*'MacOS cannot verify the developer of "createFolders"...'*](#CannotBeOpened); in this case read the text and choose *"Open"*
 4. Click *"Process File"* to get started
    * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
    * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
@@ -190,13 +193,12 @@ The first time you run the Portfolio Creator application you will need to take s
 6. Click *"Process File"* to process a student export
 7. Review the processed files and correct any errors
 
+
 ```python
-%alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
-%mdc
+# !alias mdc /Users/aaronciuffo/bin/develtools/mdconvert README.ipynb
+!jupyter-nbconvert --to markdown README.ipynb
+
 ```
-
-    [NbConvertApp] Converting notebook README.ipynb to markdown
-
 
 
 ```python
