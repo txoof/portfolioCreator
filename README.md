@@ -8,10 +8,10 @@ Create student cumulative folders on Google Drive using Google FileStream using 
 
 This assumes you already have [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 
-1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
-2. Locate the file `createFolders.tgz` -- likely in your `Downloads` folder
-3. Double click on the file to decompress it
-4. Locate the createFolders icon and drag it into your `Applications` folder
+1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
+2. Locate the file `createFolders.pkg` -- likely in your `Downloads` folder
+3. Double click on the file to run the installer
+    * You may need an administrator's password to install this
 5. Locate the createFolders icon in your `Applications` folder and double click on it to run
     * If you receive error messages or popups preventing you from running the application see the [Help](#Help) section
 7. Click "Process File" to begin processing a student.export file from PowerSchool
@@ -121,7 +121,6 @@ optional arguments:
 
 ## Help
 ### "createFolders" Cannot Be Opened
-<a name="CannotBeOpened"></a>
 ![unidentified developer window](./documentation/unidentified_devel.png)
 
 This error indicates that the program was not created by an "official" developer. In this case, this is not a problem. Take the following steps to run the program:
@@ -176,12 +175,11 @@ To completely uninstall the application do the following:
 The first time you run the Portfolio Creator application you will need to take some special steps:
 
 1. Make sure [Google FileStream](#filestream) installed and you are signed in!
-2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.tgz)
+2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
 3. Locate and unpack the applicaton in your Downloads folder
    * Double click to unzip
    * Move into your Applications folder
    * Right click on the createFolders application icon and choose *"Open"*
-      - You may see the message [*'MacOS cannot verify the developer of "createFolders"...'*](#CannotBeOpened); in this case read the text and choose *"Open"*
 4. Click *"Process File"* to get started
    * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
    * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
@@ -200,7 +198,6 @@ The first time you run the Portfolio Creator application you will need to take s
 
 ```
 
+    [NbConvertApp] Converting notebook README.ipynb to markdown
+    [NbConvertApp] Writing 13112 bytes to README.md
 
-```python
-
-```
