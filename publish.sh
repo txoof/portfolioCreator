@@ -1,7 +1,8 @@
 #!/bin/zsh
 source_path=./create_folders
 
-publish_tar=createFolders.tgz
+#publish_tar=createFolders.tgz
+publish_pkg=createfolders.pkg
 
 version_number=`grep version $source_path/constants.py | sed -nE  's/^version[ ]+=[ ]+(.*)/\1/p' | tr -d \'\"`
 
@@ -17,5 +18,5 @@ fi
 tag="v$version_number"
 
 git tag -a "$tag" -m "$1"
-git commit -m "update tar distribution $1" $publish_tar
+git commit -m "update pkg distribution $1" $publish_pkg
 git push origin $tag 
