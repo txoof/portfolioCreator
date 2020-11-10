@@ -8,8 +8,6 @@ Create student cumulative folders on Google Drive using Google FileStream using 
 
 This assumes you already have [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 
-If the create_folders application is not installed, see the [install](#Install instructions below
-
 1. Locate the createFolders icon in your `Applications` folder and double click on it to run
     * If you receive error messages or popups preventing you from running the application see the [Help](#Help) section
 2. Once the applicaiton has opened (this can take 10-30 seconds sometimes), click "Process File" to begin processing a student.export file from PowerSchool
@@ -186,21 +184,19 @@ To completely uninstall the application do the following:
 The first time you run the Portfolio Creator application you will need to take some special steps:
 
 1. Make sure [Google FileStream](#filestream) installed and you are signed in!
-2. Download the latest version from [here](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
-3. Locate and unpack the applicaton in your Downloads folder
-   * Double click to unzip
-   * Move into your Applications folder
-   * Right click on the createFolders application icon and choose *"Open"*
-4. Click *"Process File"* to get started
-   * If this is the **very first** time you have run the application it will ask you to choose the Google Shared Drive and the FOLDER where portfolio/cummulative files are stored.
-   * Click the *"Browse"* button and find the Google Shared drive likely called *ASH Student Cumulative Folders*
-   * Within the *ASH Student Cumulative Folders* drive locate the folder that contains the folder *Student Cumulative Folders (AKA Student Portfolios)* and click *"Choose"* then click *"Ok"* to accept the drive and folder. 
-   * If there are any problems, the applicaiton will warn you and stop you from proceeding
-   * See [Choosing the Shared Drive and Cumulative Student Folder](#ChooseSharedDrive) for screenshots and more information
-5. Create an export from powerschool 
+2. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
+3. Locate the file `createFolders.pkg` -- likely in your `Downloads` folder
+4. Double click on the file to run the installer
+    * You may need an administrator's password to install this
+5. Locate the create_folders icon in your Applications folder
+6. Launch the application by double clicking
+7. If this is the first time you have run create_folders on this computer you will be prompted to select the Google Shared Drive **AND** the folder that contains Student Cumulative Folders. 
+   * see [below](#ChooseSharedDrive) for more detailed instructions 
+8. Click *"Process File"* to get started
+9. Create an export from powerschool 
    * See: [Create a Student Export](#prepareExport)
-6. Click *"Process File"* to process a student export
-7. Review the processed files and correct any errors
+10. Click *"Process File"* to process a student export
+11. Review the processed files and correct any errors
 
 
 ```python
