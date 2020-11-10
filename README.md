@@ -2,7 +2,6 @@
 Create student cumulative folders on Google Drive using Google FileStream using exports from PowerSchool.
 
 
-
 ## Quick Start
 **IMPORTANT if you have never run the application see the [First Run Instructions](#FirstRun) below!**
 
@@ -44,7 +43,9 @@ createFolders reads data from PowerSchool exports to create folders in Google Dr
 createFolders will **not create duplicate folders** for existing students and will not create folders when a duplicate student number is found. This means that you can run the same batch of students several times without harm. If a folder already exists, it will simply be checked for consistency and further ignored.
 
 #### Locate Students for Export
-Locate any new students in PowerSchool and run a quick export. This query can be very helpful: `Grade_Level=X;DistrictEntryDate>=MM/DD/YYYY`
+* Locate all students that do not have portfolio links use: `area=`
+* Locate students by grade level: `Grade_Level=X`
+* Locate students by entry date: `DistrictEntryDate>=MM/DD/YYYY`
 
 #### Quick Export Fields
 When running a Quick Export the following fileds **must be included**. Any additional fields will be ignored. 
