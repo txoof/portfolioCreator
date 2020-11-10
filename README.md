@@ -8,24 +8,35 @@ Create student cumulative folders on Google Drive using Google FileStream using 
 
 This assumes you already have [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and are signed in as well as a prepared student.export file from PowerSchool.
 
-1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
-2. Locate the file `createFolders.pkg` -- likely in your `Downloads` folder
-3. Double click on the file to run the installer
-    * You may need an administrator's password to install this
-5. Locate the createFolders icon in your `Applications` folder and double click on it to run
+If the create_folders application is not installed, see the [install](#Install instructions below
+
+1. Locate the createFolders icon in your `Applications` folder and double click on it to run
     * If you receive error messages or popups preventing you from running the application see the [Help](#Help) section
-7. Click "Process File" to begin processing a student.export file from PowerSchool
-6. If this is the first time you have run this program, you will be asked to choose a Google Shared drive **and** cumulative student folder. 
+2. Once the applicaiton has opened (this can take 10-30 seconds sometimes), click "Process File" to begin processing a student.export file from PowerSchool
+3. If this is the first time you have run this program, you will be asked to choose a Google Shared drive **and** cumulative student folder. 
     * If you are unsure how to do this, see the [Help](#Help) section
-8. When prompted slect a student export file to process by clicking "Browse"
-9. Click "Ok" to begin the processing
-10. When the process is complete, review the summary
+4. When prompted slect a student export file to process by clicking "Browse"
+5. Click "Ok" to begin the processing
+6. When the process is complete, review the summary
     * A record of the completed tasks is made on your desktop in a folder called `createFolders`
     * Make sure to send the `YYYY-MM-DD_Portfolio_Links_for_PowerSchool.csv` to the PowerSchool Administrator
-11. You may process another file immediately if needed
+7. Make sure you review any error files that were produced. These files include student folders that could not be created as well as potential solutions for resolving the issue.
+8. You may process another file immediately if needed
 
 ## Instructions
 createFolders depends on a working instance of [Google FileStream](https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg) installed and signed in with an account that can write to the Student Cumulative Folders shared drive. See the [Help](#Help) section for assistance in setting up FileStream.
+
+### Install create_folders
+<a name="Install"></a>
+1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
+2. Locate the create_folders icon in your Applications folder
+3. Launch the application
+4. If this is the first time you have run create_folders on this computer you will be prompted to select the Google Shared Drive **AND** the folder that contains Student Cumulative Folders. 
+   * see [below](#ChooseSharedDrive) for more detailed instructions 
+2. Locate the file `createFolders.pkg` -- likely in your `Downloads` folder
+3. Double click on the file to run the installer
+    * You may need an administrator's password to install this
+
 
 <a name="prepareExport"> </a>
 ### Prepare a student.export.text file
