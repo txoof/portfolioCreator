@@ -10,4 +10,4 @@ pipenv run pyinstaller --onefile --noconfirm --clean --add-data Help.md:. --add-
 #tar cvzf  ../../$app_name.tgz ./$app_name
 #popd
 popd
-~/bin/develtools/codesign.py codesign.ini
+~/bin/develtools/pycodesign.py codesign.ini
