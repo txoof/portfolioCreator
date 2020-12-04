@@ -25,7 +25,7 @@ createFolders depends on a working instance of [Google FileStream](https://dl.go
 
 ### Install create_folders
 <a name="Install"></a>
-1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createFolders.pkg)
+1. Download the application from [this link](https://github.com/txoof/portfolioCreator/raw/master/createfolders.pkg)
 2. Locate the create_folders icon in your Applications folder
 3. Launch the application
 4. If this is the first time you have run create_folders on this computer you will be prompted to select the Google Shared Drive **AND** the folder that contains Student Cumulative Folders. 
