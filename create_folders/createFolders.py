@@ -264,6 +264,7 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
         for gld in grade_level_dirs:
             subdir = student_dir.mkchild(gld, exist_ok=True)
             if not subdir.exists():
+                # DEBUG throws TypeError here 
                 try:
                     subdir.mkdir()
                 except (OSError, FileNotFoundError) as e:
@@ -293,10 +294,12 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
         logging.debug(f'class: {class_of}, lastfirst: {last_first}, student number: {student_number}')
         directories_to_check.append(GDStudentPath(drive_path, ClassOf=class_of, Student_Number=student_number, LastFirst=last_first))
     
+    logging.debug(f'checking directories: {directories_to_check}')
     
     # check for similar directories
     for index, directory in enumerate(directories_to_check):
         logging.debug(f'checking for existing dirs with student number: {directory.Student_Number}')
+        # update set of matches
         directory.check_similar()
         # new directories
         if len(directory.matches) == 0:
@@ -306,6 +309,11 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
             except (OSError, FileNotFoundError) as e:
                 logging.warning(f'error creating directory: {directory.path}: {e}')
                 directories['failed'].append(directory)
+                continue
+            except TypeError as e:
+                logging.warning(f'could not create directory for {last_first}, StudentNumber: {student_number}, ClassOf: {class_of}')
+                directories['failed'].append(directory)
+                continue
             else:
                 directories['created'].append(directory)
             
@@ -342,6 +350,23 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
                 
     return directories
+
+
+
+
+
+
+# dp = "/Volumes/GoogleDrive/Shared drives/ASH Student Cumulative Folders/Student Cumulative Folders (AKA Student Portfolios)"
+# cf = "/Users/aciuffo/Downloads/student.export-78.text"
+# csvlst = csv_to_list(cf)
+# header_map, missing_headers = map_headers(csvlst, constants.expected_headers.keys())
+# rows, invalid = validate_data(csvlst, constants.expected_headers, header_map)
+
+
+# rows = [rows[1]]
+
+
+# q = create_folders(drive_path=dp, valid_rows=rows, header_map=header_map)
 
 
 
