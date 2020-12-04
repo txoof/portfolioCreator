@@ -4,11 +4,9 @@
 
 
 
-
-
-
 import logging
 logger = logging.getLogger(__name__)
+
 
 
 
@@ -23,6 +21,7 @@ from pathlib import Path
 import subprocess
 import os
 import glob
+
 
 
 
@@ -280,6 +279,7 @@ class GoogleDrivePath():
 
 
 
+
 class GDStudentPath(GoogleDrivePath):
     def __init__(self, root=None, ClassOf=None, Student_Number=None, LastFirst=None):
         '''student directory in google drive; child class of GoogleDrivePath
@@ -322,6 +322,7 @@ class GDStudentPath(GoogleDrivePath):
         '''attempt to set the path based on the root and the path_parts once they are all set'''
         for key in self.path_parts:
             if not self.path_parts[key]:
+                logging.debug(f'no value provided for {key}: {self.path_parts[key]}')
                 self._path = None
                 break
             else:
@@ -475,6 +476,7 @@ class GDStudentPath(GoogleDrivePath):
 
 
 
+
 def main():
     my_drive = GoogleDrivePath('/Volumes/GoogleDrive/My Drive')
     
@@ -491,6 +493,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
