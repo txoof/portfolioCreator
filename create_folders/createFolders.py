@@ -300,7 +300,8 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
     for index, directory in enumerate(directories_to_check):
         logging.debug(f'checking for existing dirs with student number: {directory.Student_Number}')
         # update set of matches
-        directory.check_similar()
+        found_similar = directory.check_similar()
+        logging.debug(f'found similar: {found_similar}')
         # new directories
         if len(directory.matches) == 0:
             logging.debug(f'creating new directory for {directory.LastFirst}')
@@ -308,9 +309,11 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
                 directory.mkdir()
             except (OSError, FileNotFoundError) as e:
                 logging.warning(f'error creating directory: {directory.path}: {e}')
+                logging.warning(f'could not create directory for {last_first}, StudentNumber: {student_number}, ClassOf: {class_of}')
                 directories['failed'].append(directory)
                 continue
             except TypeError as e:
+                logging.warning(f'error creating directory: {directory.path}: {e}')                
                 logging.warning(f'could not create directory for {last_first}, StudentNumber: {student_number}, ClassOf: {class_of}')
                 directories['failed'].append(directory)
                 continue
@@ -357,13 +360,20 @@ def create_folders(drive_path, valid_rows, header_map, window=None):
 
 
 # dp = "/Volumes/GoogleDrive/Shared drives/ASH Student Cumulative Folders/Student Cumulative Folders (AKA Student Portfolios)"
-# cf = "/Users/aciuffo/Downloads/student.export-78.text"
+# cf = "/Users/aaronciuffo/Downloads/student.export.text"
 # csvlst = csv_to_list(cf)
 # header_map, missing_headers = map_headers(csvlst, constants.expected_headers.keys())
 # rows, invalid = validate_data(csvlst, constants.expected_headers, header_map)
 
 
-# rows = [rows[1]]
+# # rows = [rows[1]]
+
+
+# # q = create_folders(drive_path=dp, valid_rows=rows, header_map=header_map)
+
+
+
+
 
 
 # q = create_folders(drive_path=dp, valid_rows=rows, header_map=header_map)
@@ -974,12 +984,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
 
 
