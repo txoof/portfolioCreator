@@ -1,4 +1,5 @@
 # createFolders
+## Current Version: 1.01.0
 Create student cumulative folders on Google Drive using Google FileStream using exports from PowerSchool.
 
 
@@ -107,7 +108,7 @@ The help button provides a brief version of this document.
 Exit the program.
 
 #### Command Line Mode
-More debugging features are available on the command line. createFolders will accept student.export files with the `-s [file]` option.
+ore debugging features are available on the command line. createFolders will accept student.export files with the `-s [file]` option.
 
 ```
 $ ./createFolders -h
