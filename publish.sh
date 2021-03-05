@@ -34,13 +34,13 @@ fi
 
 tag="v$version_number"
 
-#pycodesign.py -O $version_number codesign.ini
+pycodesign.py -O $version_number codesign.ini
 
-#if [ $? -ne 0 ] 
-#then
-#  echo codesigning failed, exiting
-#  exit 1
-#fi
+if [ $? -ne 0 ] 
+then
+  echo codesigning failed, exiting
+  exit 1
+fi
 
 git tag -a "$tag" -m "$1"
 git commit -m "update tar distribution $1" $publish_pkg
