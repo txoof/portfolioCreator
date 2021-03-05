@@ -1,12 +1,19 @@
 # Backup Plan for CreateFolders
 If the create folders application is not available, an alternative method can be used for creating student folders manually.
 
+A short video version of these instructions can be found [here](https://drive.google.com/file/d/1K7LQUSNoOL8uj0MYqbRi0WV_58dTYj7J/view?usp=sharing)
+
+<a name="setup"></a>
 ## Setup
-Download the student template file: [Template File](https://github.com/txoof/portfolioCreator/raw/master/backup/Cumulative_Folder_Template.zip)
+You will need:
+* An account with access to the [student cumulative folders shared drive](https://drive.google.com/drive/folders/0AKKRR6NkiaQBUk9PVA)
+* Google Chrome -- please make sure you are signed in with an account that has access to the shared drive above (test by clicking the link)
+* The student template file available at this link: [Template File] (https://github.com/txoof/portfolioCreator/raw/master/backup/Cumulative_Folder_Template.zip) 
 
 <a name="create_folder"></a>
 ## Creating a Folder
-1. Double click on the Template File to produce a folder named "XXXXXX - LName, FName"
+Make sure you have downloaded the template file in the [previous step](#setup) before proceeding.
+1. Double click on the Template File to unzip it and produce a folder named "XXXXXX - LName, FName"
 2. Rename the folder so it matches the student ID, LastName, FirstName:
     * `186768 - Lloyd Wright, Frank`
 2. Open Google Drive and Browse to the Shared Drive: [ASH Student Cumulative Folders](https://drive.google.com/drive/folders/176UqrsfSHrJX-9AXMzpTm7wtZYfPQj8U)
@@ -15,6 +22,7 @@ Download the student template file: [Template File](https://github.com/txoof/por
     * If the ClassOf-XXXX folder does not yet exist, you may create one (e.g. for a new group of preschool students)
 4. Drag and drop the Template Folder into the the ClasOf-XXXX folder
 5. Select and copy the URL at the top of the screen -- you will need this in the next step
+6. Repeat steps 1-5 as needed for all new students.
 
 <a name="create_spreadsheet"></a>
 ## Creating the PowerSchool Data Import for the PS Administrator
@@ -40,5 +48,14 @@ The spreadsheet file must be downloaded as a TSV and sent to the PowerSchool Adm
 
 ```python
 !jupyter-nbconvert --to markdown Backup_Plan.ipynb
+
+```
+
+    [NbConvertApp] Converting notebook Backup_Plan.ipynb to markdown
+    [NbConvertApp] Writing 3167 bytes to Backup_Plan.md
+
+
+
+```python
 
 ```
